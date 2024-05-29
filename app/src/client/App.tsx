@@ -49,12 +49,8 @@ export default function App({ children }: { children: ReactNode }) {
     return location.pathname.startsWith('/account');
   }, [location]);
 
-  const isPlayGroundPage = useMemo(() => {
-    return location.pathname.startsWith('/playground');
-  }, [location]);
-
-  const isBuildPage = useMemo(() => {
-    return location.pathname.startsWith('/build');
+  const isChatPage = useMemo(() => {
+    return location.pathname.startsWith('/chat');
   }, [location]);
 
   useEffect(() => {
@@ -104,7 +100,7 @@ export default function App({ children }: { children: ReactNode }) {
     <>
       <div className='bg-gradient-to-b from-airt-hero-gradient-start via-airt-hero-gradient-middle to-airt-secondary min-h-screen dark:text-white dark:bg-boxdark-2'>
         {isError && (addServerErrorClass(), (<ServerNotRechableComponent />))}
-        {isAdminDashboard || isPlayGroundPage || isBuildPage ? (
+        {isAdminDashboard || isChatPage ? (
           <>
             {showTosAndMarketingEmailsModal ? (
               <>
@@ -151,12 +147,8 @@ const FooterWrapper: React.FC = () => {
       <div className='flex items-center h-20 bg-airt-footer-copyrights'>
         <p className='text-center w-full text-sm text-airt-font-base opacity-50'>
           © 2024{' '}
-          <a
-            href='https://airt.ai'
-            className='text-sm leading-6 text-airt-font-base underline dark:text-white hover:opacity-80'
-            target='_blank'
-          >
-            airt
+          <a href='#' className='text-sm leading-6 text-airt-font-base underline dark:text-white hover:opacity-80'>
+            Your Saas
           </a>
           . All rights reserved.
         </p>

@@ -19,7 +19,7 @@ export default function LandingPage() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
 
-  const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }} alt='FastAgency' />;
+  const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }} alt='logo' />;
 
   return (
     <div className='dark:text-white dark:bg-boxdark-2'>
@@ -32,10 +32,7 @@ export default function LandingPage() {
               className='flex items-center -m-1.5 p-1.5 text-airt-font-base duration-300 ease-in-out hover:text-airt-secondary'
             >
               <NavLogo />
-              <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>FastAgency</span>
-              <span className='ml-2 text-sm font-semibold leading-6 '>
-                <sup className='text-base text-airt-font-base'>βeta</sup>
-              </span>
+              <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>Your Saas</span>
             </a>
           </div>
           <div className='flex lg:hidden'>
@@ -143,19 +140,12 @@ export default function LandingPage() {
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-5xl text-center'>
                 <h1 className='text-4xl font-rubik text-airt-font-base sm:text-6xl dark:text-white'>
-                  FastAgency: A framework for building <span className='italic'>multi-agent </span> AI services.
+                  Some <span className='italic'>cool</span> words about your product
                 </h1>
                 <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-airt-font-base dark:text-white'>
-                  Quickly build scalable SaaS solutions using our powerful, multi-agent AI framework that streamlines
-                  complex processes.
+                  With some more exciting words about your product!
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
-                  {/* <a
-                    href={DOCS_URL}
-                    className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-airt-font-base ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-airt-primary shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
-                  >
-                    Get Started <span aria-hidden='true'>→</span>
-                  </a> */}
                   <UserActionButton user={user} renderGoToChat={true} />
                 </div>
               </div>
@@ -180,10 +170,6 @@ export default function LandingPage() {
             <p className='mt-2 text-4xl font-bold tracking-tight text-airt-font-base sm:text-5xl dark:text-airt-font-base'>
               <span className='text-airt-font-base'>Features</span>
             </p>
-            {/* <p className='mt-6 text-lg leading-8 text-airt-font-base dark:text-airt-font-base'>
-              Don't work harder.
-              <br /> Work smarter.
-            </p> */}
           </div>
           <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
             <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16'>
@@ -205,7 +191,7 @@ export default function LandingPage() {
         </div>
 
         {/* Testimonial section */}
-        {/* <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
+        <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
           <div className='relative sm:left-5 -m-2 rounded-xl bg-airt-primary lg:ring-1 lg:ring-airt-primary lg:-m-4 '>
             <div className='relative sm:top-5 sm:right-5 bg-airt-font-base dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
               <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-airt-primary dark:text-white'>
@@ -231,7 +217,30 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
+        {/* FAQ */}
+        <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
+          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
+            Frequently asked questions
+          </h2>
+          <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
+            {faqs.map((faq) => (
+              <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
+                <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>
+                  {faq.question}
+                </dt>
+                <dd className='flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0'>
+                  <p className='text-base leading-7 text-airt-primary dark:text-white'>{faq.answer}</p>
+                  {faq.href && (
+                    <a href={faq.href} className='text-base leading-7 text-airt-primary hover:opacity-80'>
+                      Learn more →
+                    </a>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </main>
     </div>
   );

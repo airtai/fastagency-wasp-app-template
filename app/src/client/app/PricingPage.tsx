@@ -62,16 +62,13 @@ const PricingPage = () => {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-airt-font-base sm:text-5xl dark:airt-font-base'>
-            Try FastAgency free for a month. <span className='text-airt-primary'>No credit card required!</span>
+            Pick your <span className='text-airt-primary'>No credit card required!</span>
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-airt-font-base dark:airt-font-base'>
-          Unlock FastAgency's full capabilities with an active subscription. Explore all features with a hassle-free
-          30-day free trial—no credit card required.
-          {/* {' '}
-          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-500'>
-            4242 4242 4242 4242 4242
-          </span> */}
+          Stripe subscriptions and secure webhooks are built-in. Just add your Stripe Product IDs! Try it out below with
+          test credit card number{' '}
+          <span className='px-2 py-1 bg-airt-primary rounded-md text-airt-font-base'>4242 4242 4242 4242 4242</span>
         </p>
         {/* <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'> */}
         <div className='justify-center isolate mx-auto mt-16 max-w-none gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none'>
