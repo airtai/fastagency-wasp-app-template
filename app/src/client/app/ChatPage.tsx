@@ -20,7 +20,6 @@ import {
   initiateChat,
   handleChatError,
 } from '../utils/chatUtils';
-import SelectTeamToChat from '../components/SelectTeamToChat';
 import Loader from '../admin/common/Loader';
 
 const chatPage = ({ user }: { user: User }) => {

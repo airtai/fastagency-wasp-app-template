@@ -7,8 +7,6 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { HiBars3 } from 'react-icons/hi2';
 import logo from '../static/logo.svg';
 import DropdownUser from './DropdownUser';
-import { DOCS_URL, BLOG_URL } from '../../shared/constants';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 import UserActionButton from '../components/UserActionButton';
 import { UserMenuItems } from '../components/UserMenuItems';
 import { navigation } from '../landing-page/contentSections';

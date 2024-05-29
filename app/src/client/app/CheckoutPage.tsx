@@ -44,7 +44,7 @@ export default function CheckoutPage() {
           </h1>
           {paymentStatus !== 'loading' && (
             <span className='text-center'>
-              You are being redirected to your build page... <br />
+              You are being redirected to your chat page... <br />
             </span>
           )}
         </div>

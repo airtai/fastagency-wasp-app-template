@@ -287,30 +287,6 @@ action updateUserById {
   entities: [User]
 }
 
-action getAvailableModels {
-  fn: import { getAvailableModels } from "@src/server/actions.js",
-  entities: []
-}
-
-action updateUserModels {
-  fn: import { updateUserModels } from "@src/server/actions.js",
-  entities: []
-}
-
-action addUserModels {
-  fn: import { addUserModels } from "@src/server/actions.js",
-  entities: []
-}
-
-action deleteUserModels {
-  fn: import { deleteUserModels } from "@src/server/actions.js",
-  entities: []
-}
-
-action validateForm {
-  fn: import { validateForm } from "@src/server/actions.js",
-  entities: []
-}
 
 action createNewChat {
   fn: import { createNewChat } from "@src/server/actions.js",
@@ -361,11 +337,6 @@ query getDailyStats {
 
 query getPaginatedUsers {
   fn: import { getPaginatedUsers } from "@src/server/queries.js",
-  entities: [User]
-}
-
-query propertyDependencies {
-  fn: import { propertyDependencies } from "@src/server/queries.js",
   entities: [User]
 }
 
