@@ -171,10 +171,12 @@ export async function sendMsgToNatsServer(
     const subject = shouldCallInitiateChat ? initiateChatSubject : serverInputSubject;
 
     NatsConnectionManager.clearConversationHistory(threadId);
-    await js.publish(
-      subject,
-      jc.encode({ user_id: userUUID, thread_id: threadId, team_id: selectedTeamUUID, msg: message })
-    );
+    const payload = { user_id: userUUID, thread_id: threadId, team_id: selectedTeamUUID, msg: message };
+    console.log('-----------');
+    console.log(selectedTeamUUID);
+    console.log(payload);
+    console.log('-----------');
+    await js.publish(subject, jc.encode(payload));
 
     if (shouldCallInitiateChat) {
       const clientInputSubject = `chat.client.messages.${threadId}`;

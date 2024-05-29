@@ -5,12 +5,15 @@ import { Link, useHistory } from 'react-router-dom';
 import { NavLink, useLocation } from 'react-router-dom';
 import EditableChatName from './EditableChatName';
 import { updateCurrentChat } from 'wasp/client/operations';
-import { CreateNewChatProps } from '../interfaces/PlaygroundPageInterface';
 
 interface ChatSidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
   refetchAllChatDetails: boolean;
+}
+
+interface CreateNewChatProps {
+  teamName?: string | null;
 }
 
 const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: ChatSidebarProps) => {
@@ -79,21 +82,17 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
 
   const handleCreateNewChat: MouseEventHandler<HTMLAnchorElement> = async (event) => {
     setSidebarOpen(false);
-    history.push(`/playground`);
-    // try {
-    //   const props: CreateNewChatProps = {
-    //     teamName: null,
-    //   };
-    //   const chat: Chat = await createNewChat(props);
-    //   history.push(`/playground/${chat.uuid}`);
-    // } catch (err: any) {
-    //   console.log('Error: ' + err.message);
-    //   if (err.message === 'No Subscription Found') {
-    //     history.push('/pricing');
-    //   } else {
-    //     window.alert('Error: Something went wrong. Please try again later.');
-    //   }
-    // }
+    try {
+      const chat: Chat = await createNewChat();
+      history.push(`/chat/${chat.uuid}`);
+    } catch (err: any) {
+      console.log('Error: ' + err.message);
+      if (err.message === 'No Subscription Found') {
+        history.push('/pricing');
+      } else {
+        window.alert('Error: Something went wrong. Please try again later.');
+      }
+    }
   };
 
   return (
@@ -170,7 +169,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
                   chats.map((chat: Chat, idx) => (
                     <NavLink
                       key={chat.id}
-                      to={`/playground/${chat.uuid}?`}
+                      to={`/chat/${chat.uuid}?`}
                       onClick={() => setSidebarOpen(false)}
                       className={`chat-link relative no-underline group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out ${
                         pathname === '/' && 'bg-gray-700 dark:bg-meta-4'

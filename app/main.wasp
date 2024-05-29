@@ -124,7 +124,7 @@ entity Chat {=psl
     uuid                      String?         @default(uuid())
     createdAt                 DateTime        @default(now())
     updatedAt                 DateTime        @updatedAt
-    team_id                   Int?
+    team_uuid                 String?
     team_name                 String?
     team_status               String?
     userRespondedWithNextAction             Boolean         @default(false)

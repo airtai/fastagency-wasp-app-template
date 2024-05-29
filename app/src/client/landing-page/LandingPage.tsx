@@ -199,7 +199,10 @@ export default function LandingPage() {
               </h2>
               <div className='relative flex flex-wrap gap-6 w-full mt-6 z-10 justify-between lg:mx-0'>
                 {testimonials.map((testimonial) => (
-                  <figure className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-airt-primary '>
+                  <figure
+                    key={testimonial.name}
+                    className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-airt-primary '
+                  >
                     <blockquote className='text-lg text-white sm:text-md sm:leading-8'>
                       <p>{testimonial.quote}</p>
                     </blockquote>

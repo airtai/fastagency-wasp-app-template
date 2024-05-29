@@ -130,11 +130,11 @@ describe('App Component', () => {
       isError: false,
       isLoading: false,
     };
-    setupMocks(mockUser, '/playground');
+    setupMocks(mockUser, '/chat');
     const { default: App } = await import('../App');
     renderInContext(
       <MemoryRouter>
-        <App children={<div>Test on Playground</div>} />
+        <App children={<div>Test on chat</div>} />
       </MemoryRouter>
     );
     await screen.findByText('Almost there...');
@@ -183,7 +183,7 @@ describe('App Component', () => {
       isError: true,
       isLoading: false,
     };
-    setupMocks(mockUser, '/playground');
+    setupMocks(mockUser, '/chat');
     const { default: App } = await import('../App');
     renderInContext(
       <MemoryRouter>

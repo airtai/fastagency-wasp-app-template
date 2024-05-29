@@ -48,7 +48,7 @@ const TosAndMarketingEmailsModal = () => {
           hasSubscribedToMarketingEmails: marketingEmailsChecked,
         }),
       });
-      history.push('/playground');
+      history.push('/chat');
     } else {
       setErrorMessage(checkBoxErrMsg);
     }

@@ -66,7 +66,7 @@ export const socketFn = (io, context) => {
             message = allMessagesOrUserQuery;
             shouldCallInitiateChat = false;
           } else {
-            message = allMessagesOrUserQuery[0].content;
+            message = allMessagesOrUserQuery[allMessagesOrUserQuery.length - 1].content;
           }
           sendMsgToNatsServer(
             socket,

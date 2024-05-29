@@ -197,7 +197,6 @@ export const updateUserModels: UpdateUserModels<UpdateUserModelsPayload, void> =
   }
   try {
     const url = `${FASTAGENCY_SERVER_URL}/user/${context.user.uuid}/models/${args.data.type_name}/${args.data.model_name}/${args.uuid}`;
-    console.log(JSON.stringify({ ...args.data }));
     const response = await fetch(url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -283,7 +282,7 @@ export const validateForm: ValidateForm<{ data: any; validationURL: string; isSe
   }
 };
 
-export const createNewChat: CreateNewChat<any, Chat> = async (args, context) => {
+export const createNewChat: CreateNewChat<void, Chat> = async (args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -295,20 +294,17 @@ export const createNewChat: CreateNewChat<any, Chat> = async (args, context) => 
   const chat = await context.entities.Chat.create({
     data: {
       user: { connect: { id: context.user.id } },
-      selectedTeam: args.teamName ? args.teamName : null,
     },
   });
 
-  // if (args.teamName) {
-  //   await context.entities.Conversation.create({
-  //     data: {
-  //       chat: { connect: { id: chat.id } },
-  //       user: { connect: { id: context.user.id } },
-  //       message: `${args.task}`,
-  //       role: 'user',
-  //     },
-  //   });
-  // }
+  await context.entities.Conversation.create({
+    data: {
+      chat: { connect: { id: chat.id } },
+      user: { connect: { id: context.user.id } },
+      message: `Welcome, ${context.user.username}! How can I help you today?`,
+      role: 'assistant',
+    },
+  });
 
   return chat;
 };
@@ -474,22 +470,13 @@ export const createNewAndReturnLastConversation: CreateNewAndReturnLastConversat
 
 type AgentPayload = {
   chatId: number;
-  messages: any;
-  model_name: string;
-  uuid: string;
 };
 
 export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any>> = async (
   {
     chatId,
-    messages,
-    model_name,
-    uuid,
   }: {
     chatId: number;
-    messages: any;
-    model_name: string;
-    uuid: string;
   },
   context: any
 ) => {
@@ -497,21 +484,16 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
     throw new HttpError(401);
   }
 
-  const payload = {
-    chat_id: chatId,
-    message: messages,
-    user_id: context.user.id,
-  };
+  const applicationUUID = 'some-uuid';
+
   console.log('===========');
-  console.log('Payload to Python server');
-  console.log(payload);
+  console.log('Sending message to application: ', applicationUUID);
   console.log('===========');
   try {
-    const url = `${FASTAGENCY_SERVER_URL}/user/${context.user.uuid}/chat/${model_name}/${uuid}`;
+    const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
     });
 
     const json: any = (await response.json()) as { detail?: string }; // Parse JSON once
@@ -523,14 +505,9 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
     }
 
     return {
-      content: json['content'],
-      smart_suggestions: json['smart_suggestions'],
       team_status: json['team_status'],
       team_name: json['team_name'],
-      team_id: json['team_id'],
-      ...(json['customer_brief'] !== undefined && {
-        customer_brief: json['customer_brief'],
-      }),
+      team_uuid: json['team_uuid'],
       ...(json['conversation_name'] !== undefined && {
         conversation_name: json['conversation_name'],
       }),

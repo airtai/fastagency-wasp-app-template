@@ -79,10 +79,15 @@ export const continueChat = async (
   inProgressConversation: any,
   userQuery: string,
   messages: any,
-  activeChatId: number,
-  selectedTeam: SelectedModelSchema
+  activeChatId: number
 ) => {
-  socket.emit('sendMessageToTeam', currentChatDetails, selectedTeam.uuid, userQuery, inProgressConversation.id);
+  socket.emit(
+    'sendMessageToTeam',
+    currentChatDetails,
+    currentChatDetails.team_uuid,
+    userQuery,
+    inProgressConversation.id
+  );
   await updateCurrentChat({
     id: activeChatId,
     data: {
@@ -98,15 +103,9 @@ export const initiateChat = async (
   inProgressConversation: any,
   socket: any,
   messages: any,
-  refetchChatDetails: () => void,
-  selectedTeam: SelectedModelSchema
+  refetchChatDetails: () => void
 ) => {
-  const response = await getAgentResponse({
-    chatId: activeChatId,
-    messages: messages,
-    model_name: selectedTeam.model_name,
-    uuid: selectedTeam.uuid,
-  });
+  const response = await getAgentResponse({ chatId: activeChatId });
   await handleAgentResponse(
     response,
     currentChatDetails,
@@ -114,8 +113,7 @@ export const initiateChat = async (
     socket,
     messages,
     activeChatId,
-    refetchChatDetails,
-    selectedTeam
+    refetchChatDetails
   );
 };
 
@@ -126,12 +124,9 @@ export const handleAgentResponse = async (
   socket: any,
   messages: any,
   activeChatId: number,
-  refetchChatDetails: () => void,
-  selectedTeam: SelectedModelSchema
+  refetchChatDetails: () => void
 ) => {
-  if (!!response.customer_brief) {
-    socket.emit('sendMessageToTeam', currentChatDetails, selectedTeam.uuid, messages, inProgressConversation.id);
-  }
+  socket.emit('sendMessageToTeam', currentChatDetails, response.team_uuid, messages, inProgressConversation.id);
 
   response['content'] &&
     (await updateCurrentConversation({
@@ -152,11 +147,10 @@ export const handleAgentResponse = async (
     id: activeChatId,
     data: {
       showLoader: false,
-      team_id: response['team_id'],
+      team_uuid: response['team_uuid'],
       team_name: response['team_name'],
       team_status: response['team_status'],
       isExceptionOccured: response['is_exception_occured'] || false,
-      customerBrief: response['customer_brief'],
       ...(chatName && {
         name: chatName,
         isChatNameUpdated: true,
