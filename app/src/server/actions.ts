@@ -297,14 +297,14 @@ export const createNewChat: CreateNewChat<void, Chat> = async (args, context) =>
     },
   });
 
-  await context.entities.Conversation.create({
-    data: {
-      chat: { connect: { id: chat.id } },
-      user: { connect: { id: context.user.id } },
-      message: `Welcome, ${context.user.username}! How can I help you today?`,
-      role: 'assistant',
-    },
-  });
+  // await context.entities.Conversation.create({
+  //   data: {
+  //     chat: { connect: { id: chat.id } },
+  //     user: { connect: { id: context.user.id } },
+  //     message: args.message,
+  //     role: 'user',
+  //   },
+  // });
 
   return chat;
 };

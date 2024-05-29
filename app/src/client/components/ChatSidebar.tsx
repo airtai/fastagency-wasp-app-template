@@ -82,17 +82,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
 
   const handleCreateNewChat: MouseEventHandler<HTMLAnchorElement> = async (event) => {
     setSidebarOpen(false);
-    try {
-      const chat: Chat = await createNewChat();
-      history.push(`/chat/${chat.uuid}`);
-    } catch (err: any) {
-      console.log('Error: ' + err.message);
-      if (err.message === 'No Subscription Found') {
-        history.push('/pricing');
-      } else {
-        window.alert('Error: Something went wrong. Please try again later.');
-      }
-    }
+    history.push(`/chat`);
   };
 
   return (
