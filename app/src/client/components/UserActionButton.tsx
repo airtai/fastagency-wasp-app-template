@@ -28,10 +28,10 @@ const UserActionButton: React.FC<UserActionButtonProps> = ({ user, renderGoToCha
 
   return renderGoToChat ? (
     <a
-      href='/build'
+      href='/chat'
       className={`rounded-md px-3.5 py-2.5 text-sm  ${themeClass}   hover:bg-opacity-85 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
     >
-      Build team <span aria-hidden='true'>→</span>
+      Go to chat <span aria-hidden='true'>→</span>
     </a>
   ) : (
     <></>

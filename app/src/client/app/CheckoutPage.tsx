@@ -10,7 +10,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     function delayedRedirect() {
       return setTimeout(() => {
-        history.push('/build');
+        history.push('/chat');
       }, 2000);
     }
 
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
     } else if (isSuccess) {
       setPaymentStatus('paid');
     } else {
-      history.push('/build');
+      history.push('/chat');
     }
     delayedRedirect();
     return () => {

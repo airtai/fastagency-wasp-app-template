@@ -17,8 +17,9 @@ const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }
 
 export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const appName = import.meta.env.REACT_APP_NAME;
   const { data: user, isLoading: isUserLoading } = useAuth();
+
   return (
     <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-airt-primary backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
@@ -28,7 +29,7 @@ export default function AppNavBar() {
             className='flex items-center -m-1.5 p-1.5 text-airt-font-base duration-300 ease-in-out hover:text-airt-secondary'
           >
             <NavLogo />
-            <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>Your SaaS</span>
+            <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>{appName}</span>
           </a>
         </div>
         <div className='flex lg:hidden'>

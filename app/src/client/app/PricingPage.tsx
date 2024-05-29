@@ -1,10 +1,12 @@
 import { useAuth } from 'wasp/client/auth';
 import { stripePayment } from 'wasp/client/operations';
-import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
+// import { TierIds, STRIPE_CUSTOMER_PORTAL_LINK } from '../../shared/constants';
+import { TierIds } from '../../shared/constants';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { cn } from '../../shared/utils';
+import { z } from 'zod';
 
 export const tiers = [
   // {
@@ -57,18 +59,23 @@ const PricingPage = () => {
     }
   }
 
+  const schema = z.string().url();
+  const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
+  const proSubscriptionPriceInUSD = import.meta.env.REACT_APP_STRIPE_PRO_SUBSCRIPTION_PRICE_IN_USD;
+  const appName = import.meta.env.REACT_APP_NAME;
+
   return (
     <div className='py-10 lg:mt-10'>
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-airt-font-base sm:text-5xl dark:airt-font-base'>
-            Pick your <span className='text-airt-primary'>No credit card required!</span>
+            Try <span className='text-airt-primary'>{appName}</span> free for a month.
+            <span className='text-airt-primary'>No credit card required!</span>
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-airt-font-base dark:airt-font-base'>
-          Stripe subscriptions and secure webhooks are built-in. Just add your Stripe Product IDs! Try it out below with
-          test credit card number{' '}
-          <span className='px-2 py-1 bg-airt-primary rounded-md text-airt-font-base'>4242 4242 4242 4242 4242</span>
+          Unlock {appName}'s full capabilities with an active subscription. Explore all features with a hassle-free
+          30-day free trial—no credit card required.{' '}
         </p>
         {/* <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'> */}
         <div className='justify-center isolate mx-auto mt-16 max-w-none gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none'>
@@ -98,7 +105,7 @@ const PricingPage = () => {
                 <p className='mt-4 text-sm leading-6 text-airt-font-base dark:airt-font-base'>{tier.description}</p>
                 <p className='mt-6 flex items-baseline gap-x-1 dark:airt-font-base'>
                   <span className='text-4xl font-bold tracking-tight text-airt-font-base dark:airt-font-base'>
-                    {tier.priceMonthly}
+                    ${proSubscriptionPriceInUSD}
                   </span>
                   <span className='text-sm font-semibold leading-6 text-airt-font-base dark:airt-font-base'>
                     /month
@@ -115,7 +122,7 @@ const PricingPage = () => {
               </div>
               {!!user && user.hasPaid ? (
                 <a
-                  href={STRIPE_CUSTOMER_PORTAL_LINK}
+                  href={customerPortalUrl}
                   aria-describedby='manage-subscription'
                   className={cn(
                     {
