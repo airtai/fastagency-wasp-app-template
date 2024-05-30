@@ -61,8 +61,8 @@ const PricingPage = () => {
 
   const schema = z.string().url();
   const customerPortalUrl = schema.parse(import.meta.env.REACT_APP_STRIPE_CUSTOMER_PORTAL);
-  const proSubscriptionPriceInUSD = import.meta.env.REACT_APP_STRIPE_PRO_SUBSCRIPTION_PRICE_IN_USD;
-  const appName = import.meta.env.REACT_APP_NAME;
+  const proSubscriptionPriceInUSD = import.meta.env.REACT_APP_STRIPE_PRO_SUBSCRIPTION_PRICE_IN_USD || '1';
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
 
   return (
     <div className='py-10 lg:mt-10'>

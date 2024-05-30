@@ -141,7 +141,7 @@ export default function App({ children }: { children: ReactNode }) {
 }
 
 const FooterWrapper: React.FC = () => {
-  const appName = import.meta.env.REACT_APP_NAME;
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
   return (
     <div>
       <Footer />

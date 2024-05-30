@@ -20,7 +20,7 @@ export default function LandingPage() {
   const { data: user, isLoading: isUserLoading } = useAuth();
 
   const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }} alt='logo' />;
-  const appName = import.meta.env.REACT_APP_NAME;
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
 
   return (
     <div className='dark:text-white dark:bg-boxdark-2'>

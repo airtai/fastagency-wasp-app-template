@@ -291,12 +291,12 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
   }
 
   const applicationUUID = process.env.FASTAGENCY_APPLICATION_UUID;
-
+  const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
   console.log('===========');
   console.log('Sending message to application: ', applicationUUID);
+  console.log('URL: ', url);
   console.log('===========');
   try {
-    const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

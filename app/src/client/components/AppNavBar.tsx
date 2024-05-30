@@ -15,7 +15,7 @@ const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }
 
 export default function AppNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const appName = import.meta.env.REACT_APP_NAME;
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
   const { data: user, isLoading: isUserLoading } = useAuth();
 
   return (
