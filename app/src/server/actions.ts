@@ -290,7 +290,7 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
     throw new HttpError(401);
   }
 
-  const applicationUUID = 'some-uuid';
+  const applicationUUID = process.env.FASTAGENCY_APPLICATION_UUID;
 
   console.log('===========');
   console.log('Sending message to application: ', applicationUUID);
@@ -298,7 +298,7 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
   try {
     const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
     const response = await fetch(url, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     });
 
