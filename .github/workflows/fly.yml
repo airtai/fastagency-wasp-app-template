@@ -19,31 +19,27 @@ jobs:
         run: |
           echo "Listing all files in app directory:"
           ls -la app
-          echo "Checking if files exist:"
-          echo "[ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]: $([ -f app/fly-client.toml ] || [ -f app/fly-server.toml ] && echo true || echo false)"
-          if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
-            echo "is_setup=false" >> $GITHUB_OUTPUT
-          else
-            echo "is_setup=true" >> $GITHUB_OUTPUT
-          fi
+          [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ] && echo "is_setup=false" >> $GITHUB_OUTPUT || echo "is_setup=true" >> $GITHUB_OUTPUT
+          echo "The value of is_setup is:"
+          cat $GITHUB_OUTPUT
         shell: bash
 
   onetime_app_setup:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.steps.checkfiles.outputs.is_setup == true
+    if: needs.check_which_job_to_run.outputs.is_setup == true
     runs-on: ubuntu-latest
     steps:
       - name: print the output
-        run: echo ${{ needs.check_which_job_to_run.steps.checkfiles.outputs.is_setup }}
+        run: echo ${{ needs.check_which_job_to_run.outputs.is_setup }}
       - name: Set up the app in Fly.io
         run: echo "Running Setup Job"
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.steps.checkfiles.outputs.is_setup == false
+    if: needs.check_which_job_to_run.outputs.is_setup == false
     runs-on: ubuntu-latest
     steps:
       - name: print the output
-        run: echo ${{ needs.check_which_job_to_run.steps.checkfiles.outputs.is_setup }}
+        run: echo ${{ needs.check_which_job_to_run.outputs.is_setup }}
       - name: Deploy the app to Fly.io
         run: echo "Running deployment job"
