@@ -17,10 +17,8 @@ jobs:
         run: |
           if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
             echo "is_setup=false" >> $GITHUB_ENV
-            echo "::set-output name=is_setup::false"
           else
             echo "is_setup=true" >> $GITHUB_ENV
-            echo "::set-output name=is_setup::true"
           fi
         shell: bash
 
