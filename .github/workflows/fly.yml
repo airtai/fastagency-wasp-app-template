@@ -9,7 +9,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      is_setup: ${{ steps.check_which_job_to_run.outputs.is_setup }}
+      is_setup: ${{ steps.checkfiles.outputs.is_setup }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
