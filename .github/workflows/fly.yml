@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  # or manually
+  workflow_dispatch:
 
 jobs:
   check_which_job_to_run:
@@ -63,7 +65,11 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: Add Fly.io configuration files
+          base: "main"
+          title: "Add Fly.io configuration files"
+          commit-message: "Add Fly.io configuration files"
+          body: "This is an automated pull request to add the Fly.io configuration files."
+      
       - name: Check outputs
         if: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
@@ -76,6 +82,41 @@ jobs:
     needs: check_which_job_to_run
     if: needs.check_which_job_to_run.outputs.is_setup == 'false'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Deploy the app to Fly.io
-        run: echo "Running deployment job"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install wasp
+        run: |
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+          echo "$HOME/.wasp/bin" >> $GITHUB_PATH
+      
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Run the wasp fly deploy command
+        working-directory: app
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          REACT_APP_STRIPE_CUSTOMER_PORTAL: ${{ vars.REACT_APP_STRIPE_CUSTOMER_PORTAL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
+          FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
+
+        run: |
+          REACT_APP_STRIPE_CUSTOMER_PORTAL=$REACT_APP_STRIPE_CUSTOMER_PORTAL wasp deploy fly deploy
+          wasp deploy fly cmd secrets set \
+          GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
+          GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
+          STRIPE_KEY=$secrets.STRIPE_KEY \
+          STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET \
+          PRO_SUBSCRIPTION_PRICE_ID=$PRO_SUBSCRIPTION_PRICE_ID \
+          FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID --context=server
