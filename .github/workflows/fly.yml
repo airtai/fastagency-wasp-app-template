@@ -19,6 +19,10 @@ jobs:
         run: |
           echo "Listing all files:"
           ls -la
+          echo "Listing all files in app directory:"
+          ls -la app
+          echo "Checking if fly-client.toml and fly-server.toml files exist"
+          -f app/fly-client.toml || -f app/fly-server.toml
           if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
             echo "is_setup=false" >> $GITHUB_OUTPUT
           else
