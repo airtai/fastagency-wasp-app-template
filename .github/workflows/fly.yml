@@ -33,6 +33,8 @@ jobs:
     if: needs.check_which_job_to_run.outputs.is_setup == true
     runs-on: ubuntu-latest
     steps:
+      - name: print the output
+        run: echo ${{ needs.check_which_job_to_run.outputs.is_setup }}
       - name: Set up the app in Fly.io
         run: echo "Running Setup Job"
 
@@ -41,5 +43,7 @@ jobs:
     if: needs.check_which_job_to_run.outputs.is_setup == false
     runs-on: ubuntu-latest
     steps:
+      - name: print the output
+        run: echo ${{ needs.check_which_job_to_run.outputs.is_setup }}
       - name: Deploy the app to Fly.io
         run: echo "Running deployment job"
