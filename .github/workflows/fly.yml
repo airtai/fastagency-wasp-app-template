@@ -15,13 +15,16 @@ jobs:
       - name: Check if the fly-client.toml and fly-server.toml files exist
         id: checkfiles
         run: |
-          echo "::set-output name=client::$(test -f app/fly-client.toml && echo true || echo false)"
-          echo "::set-output name=server::$(test -f app/fly-server.toml && echo true || echo false)"
+          if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
+            echo "is_setup=false" >> $GITHUB_ENV
+          else
+            echo "is_setup=true" >> $GITHUB_ENV
+          fi
         shell: bash
 
   onetime_app_setup:
     needs: check_which_job_to_run
-    if: ${{ needs.check_which_job_to_run.outputs.client == 'false' || needs.check_which_job_to_run.outputs.server == 'false' }}
+    if: ${{ env.is_setup == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Set up the app in Fly.io
@@ -29,7 +32,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: ${{ needs.check_which_job_to_run.outputs.client == 'true' && needs.check_which_job_to_run.outputs.server == 'true' }}
+    if: ${{ env.is_setup == 'false' }}
     runs-on: ubuntu-latest
     steps:
       - name: Deploy the app to Fly.io
