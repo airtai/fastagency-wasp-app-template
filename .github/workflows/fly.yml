@@ -17,6 +17,8 @@ jobs:
       - name: Check if the fly-client.toml and fly-server.toml files exist
         id: checkfiles
         run: |
+          echo "Listing all files:"
+          ls -la
           if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
             echo "is_setup=false" >> $GITHUB_OUTPUT
           else
