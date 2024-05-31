@@ -6,8 +6,8 @@ jobs:
   check_which_job_to_run:
     runs-on: ubuntu-latest
     permissions:
-          contents: read
-          packages: write
+      contents: read
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,18 +20,17 @@ jobs:
         shell: bash
 
   onetime_app_setup:
-    needs: check_files
-      if: ${{ needs.check_files.outputs.client == 'false' || needs.check_files.outputs.server == 'false' }}
-      runs-on: ubuntu-latest
-      steps:
-        - name: Set up the app in Fly.io
-          run: echo "Running Setup Job"
+    needs: checkfiles
+    if: ${{ needs.checkfiles.outputs.client == 'false' || needs.checkfiles.outputs.server == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up the app in Fly.io
+        run: echo "Running Setup Job"
 
   deployment:
-    needs: check_files
-      if: ${{ needs.check_files.outputs.client == 'true' && needs.check_files.outputs.server == 'true' }}
-      runs-on: ubuntu-latest
-      steps:
-        - name: Deploy the app to Fly.io
-          run: echo "Running deployment job"
-      
+    needs: checkfiles
+    if: ${{ needs.checkfiles.outputs.client == 'true' && needs.checkfiles.outputs.server == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy the app to Fly.io
+        run: echo "Running deployment job"
