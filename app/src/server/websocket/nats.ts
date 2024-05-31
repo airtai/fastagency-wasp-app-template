@@ -1,12 +1,13 @@
 import { connect, consumerOpts, JSONCodec, Subscription, JetStreamClient } from 'nats';
 import { updateDB } from './webSocket';
+import { FASTAGENCY_SERVER_URL } from '../common/constants';
 
 function generateNatsUrl(natsUrl: string | undefined, fastAgencyServerUrl: string | undefined): string | undefined {
   if (natsUrl) return natsUrl;
   return fastAgencyServerUrl ? `${fastAgencyServerUrl.replace('https://', 'tls://')}:4222` : fastAgencyServerUrl;
 }
 
-const NATS_URL = generateNatsUrl(process.env['NATS_URL'], process.env['FASTAGENCY_SERVER_URL']);
+const NATS_URL = generateNatsUrl(process.env['NATS_URL'], FASTAGENCY_SERVER_URL);
 console.log(`NATS_URL=${NATS_URL}`);
 
 class NatsConnectionManager {

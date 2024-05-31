@@ -35,7 +35,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
         window.alert('Error: Something went wrong. Please try again later.');
       }
     }
-    if (currentChatDetails && !currentChatDetails.showLoader) {
+    if (currentChatDetails && !currentChatDetails.showLoader && currentChatDetails.team_status !== 'inprogress') {
       setFormInputValue('');
       handleFormSubmit(formInputValue);
     }
