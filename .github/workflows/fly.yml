@@ -20,16 +20,16 @@ jobs:
         shell: bash
 
   onetime_app_setup:
-    needs: checkfiles
-    if: ${{ needs.checkfiles.outputs.client == 'false' || needs.checkfiles.outputs.server == 'false' }}
+    needs: check_which_job_to_run
+    if: ${{ needs.check_which_job_to_run.outputs.client == 'false' || needs.check_which_job_to_run.outputs.server == 'false' }}
     runs-on: ubuntu-latest
     steps:
       - name: Set up the app in Fly.io
         run: echo "Running Setup Job"
 
   deployment:
-    needs: checkfiles
-    if: ${{ needs.checkfiles.outputs.client == 'true' && needs.checkfiles.outputs.server == 'true' }}
+    needs: check_which_job_to_run
+    if: ${{ needs.check_which_job_to_run.outputs.client == 'true' && needs.check_which_job_to_run.outputs.server == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Deploy the app to Fly.io
