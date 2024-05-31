@@ -8,6 +8,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      is_setup: ${{ steps.check_which_job_to_run.outputs.is_setup }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,9 +18,9 @@ jobs:
         id: checkfiles
         run: |
           if [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ]; then
-            echo "is_setup=false" >> $GITHUB_ENV
+            echo "is_setup=false" >> $GITHUB_OUTPUT
           else
-            echo "is_setup=true" >> $GITHUB_ENV
+            echo "is_setup=true" >> $GITHUB_OUTPUT
           fi
         shell: bash
 
