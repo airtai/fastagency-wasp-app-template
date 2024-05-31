@@ -34,8 +34,8 @@ jobs:
     if: needs.check_which_job_to_run.outputs.is_setup == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
