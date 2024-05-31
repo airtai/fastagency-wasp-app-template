@@ -3,7 +3,7 @@ on: [push, workflow_dispatch]
 
 jobs:
     unit_test:
-      name: Run unit tests and try to build the app
+      name: Run tests and verify build
       runs-on: ubuntu-latest
       permissions:
           contents: read
@@ -24,5 +24,5 @@ jobs:
           - name: Build wasp
             run: cd app && wasp build
           
-          - name: Build frontend
+          - name: Verify build
             run: cd app && cd .wasp/build/web-app && npm install && REACT_APP_API_URL="http://this-is-a-test-url" npm run build

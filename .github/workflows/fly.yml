@@ -1,0 +1,40 @@
+name: Fly Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_which_job_to_run:
+    runs-on: ubuntu-latest
+    permissions:
+          contents: read
+          packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if the fly-client.toml and fly-server.toml files exist
+        id: checkfiles
+        run: |
+          echo "::set-output name=client::$(test -f app/fly-client.toml && echo true || echo false)"
+          echo "::set-output name=server::$(test -f app/fly-server.toml && echo true || echo false)"
+        shell: bash
+
+  onetime_app_setup:
+    needs: check_files
+      if: ${{ needs.check_files.outputs.client == 'false' || needs.check_files.outputs.server == 'false' }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set up the app in Fly.io
+          run: echo "Running Setup Job"
+
+  deployment:
+    needs: check_files
+      if: ${{ needs.check_files.outputs.client == 'true' && needs.check_files.outputs.server == 'true' }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy the app to Fly.io
+          run: echo "Running deployment job"
+      
