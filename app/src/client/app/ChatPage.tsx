@@ -20,9 +20,7 @@ import {
   initiateChat,
   handleChatError,
 } from '../utils/chatUtils';
-import SelectTeamToChat from '../components/SelectTeamToChat';
 import Loader from '../admin/common/Loader';
-import { SelectedModelSchema } from '../interfaces/BuildPageInterfaces';
 
 const chatPage = ({ user }: { user: User }) => {
   const [refetchAllChatDetails, setRefetchAllChatDetails] = useState(false);
@@ -129,12 +127,6 @@ const chatPage = ({ user }: { user: User }) => {
   // const userSelectedAction: any = queryParams.get('selected_user_action');
   let userSelectedActionMessage: string | null = null;
 
-  const handleTeamClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    e.preventDefault();
-    sessionStorage.setItem('selectedBuildPageTab', 'team');
-    history.push(`/build`);
-  };
-
   // if (isLoading) {
   //   return (
   //     <div className='z-[999999] absolute inset-0 flex items-center justify-center bg-white bg-opacity-50'>
@@ -174,7 +166,7 @@ const chatPage = ({ user }: { user: User }) => {
             )}
           </div>
         ) : (
-          <DefaultMessage />
+          <></>
         )}
         {notificationErrorMessage && (
           <NotificationBox type='error' onClick={notificationOnClick} message={notificationErrorMessage} />
@@ -186,14 +178,3 @@ const chatPage = ({ user }: { user: User }) => {
 
 const ChatPageWithCustomAuth = CustomAuthRequiredLayout(chatPage);
 export default ChatPageWithCustomAuth;
-
-function DefaultMessage() {
-  return (
-    <p
-      className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-6xl text-captn-light-cream opacity-70'
-      style={{ lineHeight: 'normal' }}
-    >
-      Please initiate a new chat or select existing chats to resume your conversation.
-    </p>
-  );
-}

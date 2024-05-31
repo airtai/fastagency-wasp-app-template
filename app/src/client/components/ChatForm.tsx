@@ -1,14 +1,17 @@
 import { type Chat } from 'wasp/entities';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { createNewChat } from 'wasp/client/operations';
+import { useHistory } from 'react-router-dom';
 
 interface ChatFormProps {
   handleFormSubmit: (userQuery: string) => void;
-  currentChatDetails: Chat;
+  currentChatDetails: Chat | null | undefined;
   triggerChatFormSubmitMsg?: string | null;
 }
 
 export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
   const [formInputValue, setFormInputValue] = useState('');
+  const history = useHistory();
 
   const formInputRef = useCallback(
     async (node: any) => {
@@ -22,7 +25,17 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!currentChatDetails.showLoader) {
+    if (!currentChatDetails) {
+      try {
+        const chat: Chat = await createNewChat();
+        history.push(`/chat/${chat.uuid}?initiateChatMsg=${formInputValue}`);
+        setFormInputValue('');
+      } catch (err: any) {
+        console.log('Error: ' + err.message);
+        window.alert('Error: Something went wrong. Please try again later.');
+      }
+    }
+    if (currentChatDetails && !currentChatDetails.showLoader) {
       setFormInputValue('');
       handleFormSubmit(formInputValue);
     }

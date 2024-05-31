@@ -2,6 +2,5 @@
 */.env.server
 */.env.client
 */node_modules
-*/migrations
 */.DS_Store
 .DS_Store

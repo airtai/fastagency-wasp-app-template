@@ -141,6 +141,7 @@ export default function App({ children }: { children: ReactNode }) {
 }
 
 const FooterWrapper: React.FC = () => {
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
   return (
     <div>
       <Footer />
@@ -148,7 +149,7 @@ const FooterWrapper: React.FC = () => {
         <p className='text-center w-full text-sm text-airt-font-base opacity-50'>
           © 2024{' '}
           <a href='#' className='text-sm leading-6 text-airt-font-base underline dark:text-white hover:opacity-80'>
-            Your Saas
+            {appName}
           </a>
           . All rights reserved.
         </p>

@@ -74,15 +74,11 @@ const ChatLayout: FC<Props> = ({
             </main>
           </AutoScrollContainer>
           {/* <!-- ===== Main Content End ===== --> */}
-          {currentChatDetails ? (
-            <ChatForm
-              handleFormSubmit={handleFormSubmit}
-              currentChatDetails={currentChatDetails}
-              triggerChatFormSubmitMsg={triggerChatFormSubmitMsg}
-            />
-          ) : (
-            <></>
-          )}
+          <ChatForm
+            handleFormSubmit={handleFormSubmit}
+            currentChatDetails={currentChatDetails}
+            triggerChatFormSubmitMsg={triggerChatFormSubmitMsg}
+          />
         </div>
 
         {/* <!-- ===== Content Area End ===== --> */}

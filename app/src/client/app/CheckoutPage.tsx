@@ -10,7 +10,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     function delayedRedirect() {
       return setTimeout(() => {
-        history.push('/build');
+        history.push('/chat');
       }, 2000);
     }
 
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
     } else if (isSuccess) {
       setPaymentStatus('paid');
     } else {
-      history.push('/build');
+      history.push('/chat');
     }
     delayedRedirect();
     return () => {
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
           </h1>
           {paymentStatus !== 'loading' && (
             <span className='text-center'>
-              You are being redirected to your build page... <br />
+              You are being redirected to your chat page... <br />
             </span>
           )}
         </div>

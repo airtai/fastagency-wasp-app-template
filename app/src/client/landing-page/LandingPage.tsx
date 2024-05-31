@@ -20,6 +20,7 @@ export default function LandingPage() {
   const { data: user, isLoading: isUserLoading } = useAuth();
 
   const NavLogo = () => <img className='h-8' src={logo} style={{ width: '1.8rem' }} alt='logo' />;
+  const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
 
   return (
     <div className='dark:text-white dark:bg-boxdark-2'>
@@ -32,7 +33,7 @@ export default function LandingPage() {
               className='flex items-center -m-1.5 p-1.5 text-airt-font-base duration-300 ease-in-out hover:text-airt-secondary'
             >
               <NavLogo />
-              <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>Your Saas</span>
+              <span className='ml-2 text-4xl font-rubik text-airt-font-base leading-6 dark:text-white'>{appName}</span>
             </a>
           </div>
           <div className='flex lg:hidden'>
