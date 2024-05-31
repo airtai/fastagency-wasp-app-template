@@ -26,7 +26,7 @@ jobs:
 
   onetime_app_setup:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == true
+    if: needs.check_which_job_to_run.outputs.is_setup == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: print the output
@@ -36,7 +36,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == false
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false'
     runs-on: ubuntu-latest
     steps:
       - name: print the output
