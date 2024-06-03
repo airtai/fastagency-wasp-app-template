@@ -88,7 +88,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
   return (
     <aside
       ref={sidebar}
-      className={` border-airt-font-base border-r absolute left-0 top-0 z-9999 flex h-screen w-75 flex-col overflow-y-hidden bg-airt-primary duration-300 ease-linear dark:bg-airt-primary lg:static lg:translate-x-0 ${
+      className={` border-white border-r absolute left-0 top-0 z-9999 flex h-screen w-75 flex-col overflow-y-hidden bg-primary duration-300 ease-linear dark:bg-primary lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -99,7 +99,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls='sidebar'
           aria-expanded={sidebarOpen}
-          className='block lg:hidden text-airt-font-base'
+          className='block lg:hidden text-white'
         >
           <svg
             className='fill-current'
@@ -119,7 +119,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
       <div>
         <Link
           to='#'
-          className='no-underline mt-7 my-1 mx-4 mb-10 flex items-center justify-left gap-2.5 rounded-md bg-airt-secondary py-4 px-4 text-center font-medium text-airt-primary hover:bg-opacity-90'
+          className='no-underline mt-7 my-1 mx-4 mb-10 flex items-center justify-left gap-2.5 rounded-md bg-secondary py-4 px-4 text-center font-medium text-primary hover:bg-opacity-90'
           onClick={handleCreateNewChat}
         >
           <span>
@@ -165,8 +165,8 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
                         pathname === '/' && 'bg-gray-700 dark:bg-meta-4'
                       } ${
                         chat.uuid === activeChat
-                          ? 'bg-airt-secondary text-airt-primary hover:bg-airt-font-base hover:text-airt-primary'
-                          : 'text-airt-font-base hover:bg-airt-secondary hover:text-airt-primary'
+                          ? 'bg-secondary text-primary hover:bg-white hover:text-primary'
+                          : 'text-white hover:bg-secondary hover:text-primary'
                       }`}
                     >
                       <svg

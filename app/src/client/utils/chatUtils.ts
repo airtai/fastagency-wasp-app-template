@@ -167,7 +167,7 @@ export const handleChatError = async (err: any, activeChatId: number, inProgress
   });
   console.log('Error: ' + err.message);
   if (err.message === 'No Subscription Found') {
-    history.push('/pricing');
+    history.push('/');
   } else {
     await updateCurrentConversation({
       //@ts-ignore

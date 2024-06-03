@@ -47,11 +47,11 @@ const TerminalDisplay: React.FC<TerminalDisplayProps> = ({ messages, maxHeight, 
       <div
         className={`relative terminal-header ${
           isMinimized ? 'rounded-lg' : 'rounded-t-lg'
-        } text-airt-font-base p-1 text-right bg-airt-secondary hover:cursor-pointer`}
+        } text-white p-1 text-right bg-secondary hover:cursor-pointer`}
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <p className='accordion-title text-sm text-left text-airt-primary'>Agent conversations</p>
-        <button className={`absolute right-4 top-4 ${isMinimized ? '' : 'open'} text-sm text-airt-primary `}>
+        <p className='accordion-title text-sm text-left text-primary'>Agent conversations</p>
+        <button className={`absolute right-4 top-4 ${isMinimized ? '' : 'open'} text-sm text-primary `}>
           {isMinimized ? (
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -85,7 +85,7 @@ const TerminalDisplay: React.FC<TerminalDisplayProps> = ({ messages, maxHeight, 
         <div
           ref={containerRef}
           onScroll={handleUserScroll}
-          className={`accordion-content scroll-container bg-airt-font-base p-4 text-airt-primary font-mono text-xs overflow-y-auto overflow-x-hidden ${
+          className={`accordion-content scroll-container bg-white p-4 text-primary font-mono text-xs overflow-y-auto overflow-x-hidden ${
             isMinimized ? 'hidden' : ''
           }`}
           style={{ maxHeight: `${maxHeight}px`, wordWrap: 'break-word' }}

@@ -55,15 +55,6 @@ function setupMocks(mockUser: any, pathName = '/') {
     }),
     Link: ({ children, to }) => <a href={to}>{children}</a>,
   }));
-
-  // Optionally mock updateCurrentUser if the user's sign-up is not complete
-  if (!mockUser.data.isSignUpComplete) {
-    const mockUpdateCurrentUser = vi.fn();
-    vi.doMock('wasp/client/operations', () => ({
-      updateCurrentUser: mockUpdateCurrentUser,
-    }));
-    return mockUpdateCurrentUser; // Return the mock function for assertions in tests
-  }
 }
 
 beforeEach(() => {
@@ -80,7 +71,6 @@ describe('App Component', () => {
       data: {
         id: 1,
         lastActiveTimestamp: new Date(),
-        isSignUpComplete: true,
       },
       isError: false,
       isLoading: false,
@@ -94,103 +84,5 @@ describe('App Component', () => {
     );
 
     await screen.findByText('Test');
-  });
-
-  it('dynamically imports and test isSignUpComplete', async () => {
-    const mockUser = {
-      data: {
-        id: 1,
-        lastActiveTimestamp: new Date(),
-        isSignUpComplete: false,
-        hasAcceptedTos: true,
-      },
-      isError: false,
-      isLoading: false,
-    };
-    const mockUpdateCurrentUser = setupMocks(mockUser);
-    const { default: App } = await import('../App');
-    renderInContext(
-      <MemoryRouter>
-        <App children={<div>Test</div>} />
-      </MemoryRouter>
-    );
-
-    await screen.findByText('Test');
-    expect(mockUpdateCurrentUser).toHaveBeenCalledWith({ isSignUpComplete: true });
-  });
-
-  it('dynamically imports and test isSignUpComplete', async () => {
-    const mockUser = {
-      data: {
-        id: 1,
-        lastActiveTimestamp: new Date(),
-        isSignUpComplete: false,
-        hasAcceptedTos: false,
-      },
-      isError: false,
-      isLoading: false,
-    };
-    setupMocks(mockUser, '/chat');
-    const { default: App } = await import('../App');
-    renderInContext(
-      <MemoryRouter>
-        <App children={<div>Test on chat</div>} />
-      </MemoryRouter>
-    );
-    await screen.findByText('Almost there...');
-  });
-
-  it('dynamically imports and test isSignUpComplete', async () => {
-    // Set a specific item for this test
-    localStorage.setItem('hasAcceptedTos', 'true');
-
-    const mockUser = {
-      data: {
-        id: 1,
-        lastActiveTimestamp: new Date(),
-        isSignUpComplete: false,
-        hasAcceptedTos: false,
-      },
-      isError: false,
-      isLoading: false,
-    };
-    const mockUpdateCurrentUser = setupMocks(mockUser);
-    const { default: App } = await import('../App');
-    renderInContext(
-      <MemoryRouter>
-        <App children={<div>Test</div>} />
-      </MemoryRouter>
-    );
-
-    await screen.findByText('Test');
-    expect(mockUpdateCurrentUser).toHaveBeenCalledWith({
-      isSignUpComplete: true,
-      hasAcceptedTos: true,
-      hasSubscribedToMarketingEmails: false,
-    });
-
-    // Cleanup localStorage mock to avoid affecting other tests
-    delete global.localStorage;
-  });
-
-  it('dynamically imports and test isSignUpComplete - server error', async () => {
-    const mockUser = {
-      data: {
-        id: 1,
-        lastActiveTimestamp: new Date(),
-        isSignUpComplete: true,
-      },
-      isError: true,
-      isLoading: false,
-    };
-    setupMocks(mockUser, '/chat');
-    const { default: App } = await import('../App');
-    renderInContext(
-      <MemoryRouter>
-        <App children={<div>Test</div>} />
-      </MemoryRouter>
-    );
-    await screen.debug();
-    await screen.findByTestId('server-error-component');
   });
 });

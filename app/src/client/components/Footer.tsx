@@ -2,9 +2,9 @@ import { footerNavigation } from '../landing-page/contentSections';
 
 export default function Footer() {
   return (
-    <div className='bg-airt-primary px-6 lg:px-8 dark:bg-boxdark-2 pb-15 mt-30 sm:mt-40'>
+    <div className='bg-primary px-6 lg:px-8 dark:bg-boxdark-2 pb-15 mt-30 sm:mt-40'>
       <section className='relative'></section>
-      <footer aria-labelledby='footer-heading' className='relative border-airt-font-base dark:border-gray-200/10'>
+      <footer aria-labelledby='footer-heading' className='relative border-white dark:border-gray-200/10'>
         <h2 id='footer-heading' className='sr-only'>
           Footer
         </h2>
@@ -15,7 +15,7 @@ export default function Footer() {
                 <li key={item.name}>
                   <a
                     href={item.href}
-                    className='text-sm leading-6 text-airt-font-base hover:underline dark:text-white'
+                    className='text-sm leading-6 text-white hover:underline dark:text-white'
                     target={`${item.name === 'airt' ? '_blank' : '_self'}`}
                   >
                     {item.name}

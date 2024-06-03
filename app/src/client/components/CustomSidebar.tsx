@@ -246,7 +246,7 @@ const CustomSidebar = ({ sidebarOpen, setSidebarOpen, onSideNavItemClick, sideNa
       ref={sidebar}
       style={{ top: '80px' }}
       className={cn(
-        'h-[calc(100vh-80px)] absolute left-0 z-9999 flex w-75 flex-col overflow-y-hidden bg-airt-primary duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0',
+        'h-[calc(100vh-80px)] absolute left-0 z-9999 flex w-75 flex-col overflow-y-hidden bg-primary duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0',
         {
           'translate-x-0': sidebarOpen,
           '-translate-x-full': !sidebarOpen,
@@ -264,7 +264,7 @@ const CustomSidebar = ({ sidebarOpen, setSidebarOpen, onSideNavItemClick, sideNa
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-controls='sidebar'
           aria-expanded={sidebarOpen}
-          className='block lg:hidden text-airt-font-base'
+          className='block lg:hidden text-white'
         >
           <svg width='24px' height='24px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
             <path
@@ -293,9 +293,9 @@ const CustomSidebar = ({ sidebarOpen, setSidebarOpen, onSideNavItemClick, sideNa
                       handleClick(item.componentName);
                     }}
                     className={cn(
-                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-airt-font-base duration-300 ease-in-out hover:bg-airt-secondary hover:text-airt-primary dark:hover:bg-meta-4',
+                      'group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-white duration-300 ease-in-out hover:bg-secondary hover:text-primary dark:hover:bg-meta-4',
                       {
-                        'bg-airt-secondary text-airt-primary': item.componentName === sideNavSelectedItem,
+                        'bg-secondary text-primary': item.componentName === sideNavSelectedItem,
                       }
                     )}
                   >

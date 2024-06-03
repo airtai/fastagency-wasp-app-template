@@ -1,7 +1,9 @@
 name: Fly Deployment Pipeline
 
 on:
-  push:
+  workflow_run:
+    workflows: ['Pipeline']
+    types: [completed]
     branches:
       - main
   # or manually
@@ -103,20 +105,13 @@ jobs:
         working-directory: app
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          REACT_APP_STRIPE_CUSTOMER_PORTAL: ${{ vars.REACT_APP_STRIPE_CUSTOMER_PORTAL }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          PRO_SUBSCRIPTION_PRICE_ID: ${{ secrets.PRO_SUBSCRIPTION_PRICE_ID }}
           FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
 
         run: |
-          REACT_APP_STRIPE_CUSTOMER_PORTAL=$REACT_APP_STRIPE_CUSTOMER_PORTAL wasp deploy fly deploy
+          wasp deploy fly deploy
           wasp deploy fly cmd secrets set \
           GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
           GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
-          STRIPE_KEY=$STRIPE_KEY \
-          STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET \
-          PRO_SUBSCRIPTION_PRICE_ID=$PRO_SUBSCRIPTION_PRICE_ID \
           FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID --context=server

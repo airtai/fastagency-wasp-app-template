@@ -1,41 +1,24 @@
-import { createTheme } from '@stitches/react';
-import { useAuth } from 'wasp/client/auth';
-import { useHistory } from 'react-router-dom';
-import { useEffect } from 'react';
-import { AuthWrapper } from './authWrapper';
-import Auth from './Auth';
-import imgUrl from '../static/logo.svg';
+import { Center, Box, Link } from '@chakra-ui/react';
+import { LoginForm } from 'wasp/client/auth';
+// Wasp's type-safe Link component
+import { Link as RRLink } from 'wasp/client/router';
+import authAppearance from './authAppearance';
 
-export enum State {
-  Login = 'login',
-  Signup = 'signup',
-}
-
-export default function Login() {
-  const history = useHistory();
-
-  const { data: user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      history.push('/');
-    }
-  }, [user, history]);
-
+export function LoginPage() {
   return (
-    <AuthWrapper>
-      <LoginForm logo={imgUrl} state={State.Login} />
-    </AuthWrapper>
+    <Center>
+      <Box mt={5}>
+        <LoginForm appearance={authAppearance} />
+        <Box ml={3}>
+          <span className='inline-block mt-1 text-primary'>
+            I don't have an account yet (
+            <Link as={RRLink} to='/signup' textDecoration='underline'>
+              go to signup
+            </Link>
+            )
+          </span>
+        </Box>
+      </Box>
+    </Center>
   );
-}
-
-export type CustomizationOptions = {
-  logo?: string;
-  socialLayout?: 'horizontal' | 'vertical';
-  appearance?: Parameters<typeof createTheme>[0];
-  state: State;
-};
-
-export function LoginForm({ appearance, logo, socialLayout, state }: CustomizationOptions) {
-  return <Auth appearance={appearance} logo={logo} socialLayout={socialLayout} state={state} />;
 }

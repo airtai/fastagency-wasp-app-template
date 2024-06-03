@@ -1,10 +1,10 @@
 export default function PrivacyPage() {
   return (
     <div>
-      <div className='mx-auto max-w-2xl pl-10 pr-10 text-airt-font-base pt-10 pb-24 sm:pb-32 lg:gap-x-8 lg:py-5 lg:px-8'>
+      <div className='mx-auto max-w-2xl pl-10 pr-10 text-white pt-10 pb-24 sm:pb-32 lg:gap-x-8 lg:py-5 lg:px-8'>
         <div className='container mx-auto py-8'>
           <h1 className='text-3xl font-semibold mb-4'>Privacy Policy</h1>
-          <p className='text-airt-font-base mb-4'>Last updated May 29, 2024</p>
+          <p className='text-white mb-4'>Last updated May 29, 2024</p>
 
           <section className='mb-8'>
             <h2 className='text-xl font-semibold mb-2'>Lorem Ipsum</h2>

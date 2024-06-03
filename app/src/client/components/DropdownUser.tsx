@@ -1,10 +1,10 @@
-import { type User } from 'wasp/entities';
+import { type AuthUser, getUsername } from 'wasp/auth';
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { UserMenuItems } from './UserMenuItems';
 import { cn } from '../../shared/utils';
 
-const DropdownUser = ({ user }: { user: Partial<User> }) => {
+const DropdownUser = ({ user }: { user: AuthUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -39,10 +39,10 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
       <button
         ref={trigger}
         onClick={toggleDropdown}
-        className='flex items-center gap-4 duration-300 ease-in-out text-airt-font-base hover:text-airt-secondary'
+        className='flex items-center gap-4 duration-300 ease-in-out text-white hover:text-secondary'
       >
         <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium dark:text-white'>{user.username}</span>
+          <span className='block text-sm font-medium dark:text-white'>{getUsername(user)}</span>
         </span>
         <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem] dark:text-white' />
         <svg
