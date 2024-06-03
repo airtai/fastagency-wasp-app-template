@@ -137,12 +137,21 @@ export default function LandingPage() {
                   With some more exciting words about your product!
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
-                  <a
-                    href='/chat'
-                    className={`rounded-md px-3.5 py-2.5 text-sm  bg-airt-primary text-airt-font-base hover:bg-opacity-85 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
-                  >
-                    Go to chat <span aria-hidden='true'>→</span>
-                  </a>
+                  {user ? (
+                    <a
+                      href='/chat'
+                      className={`rounded-md px-3.5 py-2.5 text-sm  bg-airt-primary text-airt-font-base hover:bg-opacity-85 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                    >
+                      Go to chat <span aria-hidden='true'>→</span>
+                    </a>
+                  ) : (
+                    <a
+                      href='/signup'
+                      className={`rounded-md px-3.5 py-2.5 text-sm  bg-airt-primary text-airt-font-base hover:bg-opacity-85 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                    >
+                      Create an account
+                    </a>
+                  )}
                 </div>
               </div>
               <div className='mt-14 flow-root sm:mt-14 '>

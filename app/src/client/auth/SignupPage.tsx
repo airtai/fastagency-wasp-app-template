@@ -1,18 +1,24 @@
+import { Center, Box, Link } from '@chakra-ui/react';
 import { SignupForm } from 'wasp/client/auth';
 // Wasp's type-safe Link component
-import { Link } from 'wasp/client/router';
+import { Link as RRLink } from 'wasp/client/router';
+import authAppearance from './authAppearance';
 
 export function SignupPage() {
   return (
-    <main>
-      {/** Wasp has built-in auth forms & flows, which you can customize or opt-out of, if you wish :)
-       * https://wasp-lang.dev/docs/guides/auth-ui
-       */}
-      <SignupForm />
-      <br />
-      <span>
-        I already have an account (<Link to='/login'>go to login</Link>).
-      </span>
-    </main>
+    <Center>
+      <Box mt={5}>
+        <SignupForm appearance={authAppearance} />
+        <Box ml={3}>
+          <span className='inline-block mt-1'>
+            I already have an account (
+            <Link as={RRLink} textDecoration='underline' to='/login'>
+              go to login
+            </Link>
+            )
+          </span>
+        </Box>
+      </Box>
+    </Center>
   );
 }
