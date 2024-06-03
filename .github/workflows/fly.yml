@@ -1,7 +1,9 @@
 name: Fly Deployment Pipeline
 
 on:
-  push:
+  workflow_run:
+    workflows: ['Pipeline']
+    types: [completed]
     branches:
       - main
   # or manually
