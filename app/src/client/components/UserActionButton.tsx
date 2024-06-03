@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import FreeTrialButton from './FreeTrialButton';
 
 export type Theme = 'dark' | 'light';
 
@@ -20,10 +19,6 @@ const UserActionButton: React.FC<UserActionButtonProps> = ({ user, renderGoToCha
         Create an account
       </Link>
     );
-  }
-
-  if (!user.hasPaid) {
-    return <FreeTrialButton theme={theme} />;
   }
 
   return renderGoToChat ? (

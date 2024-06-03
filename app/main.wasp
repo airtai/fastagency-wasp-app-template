@@ -181,11 +181,6 @@ page SignupPage {
   component: import { Signup } from "@src/client/auth/SignupPage"
 }
 
-route PricingPageRoute { path: "/pricing", to: PricingPage }
-page PricingPage {
-  component: import PricingPage from "@src/client/app/PricingPage"
-}
-
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   component: import AccountPageWithCustomAuth from "@src/client/app/AccountPage"
@@ -271,11 +266,6 @@ page AdminUIButtonsPage {
  */
 
 // 📝 Actions
-
-action stripePayment {
-  fn: import { stripePayment } from "@src/server/actions.js",
-  entities: [User]
-}
 
 action updateCurrentUser {
   fn: import { updateCurrentUser } from "@src/server/actions.js",
@@ -364,13 +354,6 @@ query getChatFromUUID {
  * 📡 These are custom Wasp API Endpoints. Use them for callbacks, webhooks, etc.
  * https://wasp-lang.dev/docs/advanced/apis
  */
-
-api stripeWebhook {
-  fn: import { stripeWebhook } from "@src/server/webhooks/stripe.js",
-  entities: [User],
-  middlewareConfigFn: import { stripeMiddlewareFn } from "@src/server/webhooks/stripe.js",
-  httpRoute: (POST, "/stripe-webhook")
-}
 
 
 /* 🕵️‍♂️ These are the Wasp Jobs. Use them to set up recurring tasks and/or queues:
