@@ -37,7 +37,7 @@ const ChatLayout: FC<Props> = ({
       history.push('/login');
     } else {
       if (!user.hasPaid && user.isSignUpComplete) {
-        history.push('/pricing');
+        history.push('/');
       }
     }
   }, [user, history]);
