@@ -47,25 +47,6 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
           </Link>
         </li>
       </ul>
-      {!!user && user.isAdmin && (
-        <ul
-          className={cn('flex flex-col gap-5 border-b border-stroke py-4 dark:border-strokedark', {
-            'sm:px-6': path !== '/admin',
-            'px-6': path === '/admin',
-          })}
-        >
-          <li className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-airt-secondary'>
-            <Link
-              to='/admin'
-              onClick={handleMobileMenuClick}
-              className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-airt-secondary'
-            >
-              <TfiDashboard size='1.1rem' />
-              Admin Dashboard
-            </Link>
-          </li>
-        </ul>
-      )}
       <button
         onClick={() => logout()}
         className={cn(

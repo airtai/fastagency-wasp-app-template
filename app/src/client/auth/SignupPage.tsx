@@ -1,11 +1,18 @@
-import { AuthWrapper } from './authWrapper';
-import imgUrl from '../static/logo.svg';
-import { State, LoginForm } from './LoginPage';
+import { SignupForm } from 'wasp/client/auth';
+// Wasp's type-safe Link component
+import { Link } from 'wasp/client/router';
 
-export function Signup() {
+export function SignupPage() {
   return (
-    <AuthWrapper>
-      <LoginForm logo={imgUrl} state={State.Signup} />
-    </AuthWrapper>
+    <main>
+      {/** Wasp has built-in auth forms & flows, which you can customize or opt-out of, if you wish :)
+       * https://wasp-lang.dev/docs/guides/auth-ui
+       */}
+      <SignupForm />
+      <br />
+      <span>
+        I already have an account (<Link to='/login'>go to login</Link>).
+      </span>
+    </main>
   );
 }

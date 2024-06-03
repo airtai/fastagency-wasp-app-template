@@ -35,10 +35,6 @@ const ChatLayout: FC<Props> = ({
   useEffect(() => {
     if (!user) {
       history.push('/login');
-    } else {
-      if (!user.hasPaid && user.isSignUpComplete) {
-        history.push('/');
-      }
     }
   }, [user, history]);
 

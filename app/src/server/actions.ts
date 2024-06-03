@@ -23,10 +23,6 @@ export const updateUserById: UpdateUserById<{ id: number; data: Partial<User> },
     throw new HttpError(401);
   }
 
-  if (!context.user.isAdmin) {
-    throw new HttpError(403);
-  }
-
   const updatedUser = await context.entities.User.update({
     where: {
       id,
@@ -53,10 +49,6 @@ export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
 export const createNewChat: CreateNewChat<void, Chat> = async (args, context) => {
   if (!context.user) {
     throw new HttpError(401);
-  }
-
-  if (!context.user.hasPaid) {
-    throw new HttpError(500, 'No Subscription Found');
   }
 
   const chat = await context.entities.Chat.create({
@@ -180,10 +172,6 @@ export const createNewAndReturnAllConversations: CreateNewAndReturnAllConversati
     throw new HttpError(401);
   }
 
-  if (!context.user.hasPaid) {
-    throw new HttpError(500, 'No Subscription Found');
-  }
-
   await context.entities.Conversation.create({
     data: {
       chat: { connect: { id: chatId } },
@@ -210,10 +198,6 @@ export const createNewAndReturnLastConversation: CreateNewAndReturnLastConversat
 > = async ({ chatId, userQuery, role, isLoading }, context) => {
   if (!context.user) {
     throw new HttpError(401);
-  }
-
-  if (!context.user.hasPaid) {
-    throw new HttpError(500, 'No Subscription Found');
   }
 
   return await context.entities.Conversation.create({

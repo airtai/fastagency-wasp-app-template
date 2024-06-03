@@ -10,7 +10,6 @@ import AppNavBar from './components/AppNavBar';
 import Footer from './components/Footer';
 import ServerNotRechableComponent from './components/ServerNotRechableComponent';
 import LoadingComponent from './components/LoadingComponent';
-import TosAndMarketingEmailsModal from './components/TosAndMarketingEmailsModal';
 
 const addServerErrorClass = () => {
   if (!document.body.classList.contains('server-error')) {
@@ -30,15 +29,10 @@ const removeServerErrorClass = () => {
  */
 export default function App({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const [showTosAndMarketingEmailsModal, setShowTosAndMarketingEmailsModal] = useState(false);
   const { data: user, isError, isLoading } = useAuth();
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return location.pathname !== '/'; //&& location.pathname !== '/login' && location.pathname !== '/signup';
-  }, [location]);
-
-  const isAdminDashboard = useMemo(() => {
-    return location.pathname.startsWith('/admin');
   }, [location]);
 
   const isCheckoutPage = useMemo(() => {
@@ -55,33 +49,10 @@ export default function App({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      if (!user.isSignUpComplete) {
-        if (user.hasAcceptedTos) {
-          updateCurrentUser({
-            isSignUpComplete: true,
-          });
-          setShowTosAndMarketingEmailsModal(false);
-        } else {
-          const hasAcceptedTos = localStorage.getItem('hasAcceptedTos') === 'true';
-          const hasSubscribedToMarketingEmails = localStorage.getItem('hasSubscribedToMarketingEmails') === 'true';
-          if (!hasAcceptedTos) {
-            setShowTosAndMarketingEmailsModal(true);
-          } else {
-            updateCurrentUser({
-              isSignUpComplete: true,
-              hasAcceptedTos: hasAcceptedTos,
-              hasSubscribedToMarketingEmails: hasSubscribedToMarketingEmails,
-            });
-            setShowTosAndMarketingEmailsModal(false);
-          }
-        }
-      } else {
-        setShowTosAndMarketingEmailsModal(false);
-        const lastSeenAt = new Date(user.lastActiveTimestamp);
-        const today = new Date();
-        if (today.getTime() - lastSeenAt.getTime() > 5 * 60 * 1000) {
-          updateCurrentUser({ lastActiveTimestamp: today });
-        }
+      const lastSeenAt = new Date(user.lastActiveTimestamp);
+      const today = new Date();
+      if (today.getTime() - lastSeenAt.getTime() > 5 * 60 * 1000) {
+        updateCurrentUser({ lastActiveTimestamp: today });
       }
     }
   }, [user]);
@@ -100,37 +71,16 @@ export default function App({ children }: { children: ReactNode }) {
     <>
       <div className='bg-gradient-to-b from-airt-hero-gradient-start via-airt-hero-gradient-middle to-airt-secondary min-h-screen dark:text-white dark:bg-boxdark-2'>
         {isError && (addServerErrorClass(), (<ServerNotRechableComponent />))}
-        {isAdminDashboard || isChatPage ? (
+        {isChatPage ? (
           <>
-            {showTosAndMarketingEmailsModal ? (
-              <>
-                <TosAndMarketingEmailsModal />
-              </>
-            ) : (
-              <>
-                {shouldDisplayAppNavBar && <AppNavBar />}
-                {children}
-              </>
-            )}
+            {shouldDisplayAppNavBar && <AppNavBar />}
+            {children}
           </>
         ) : (
           <div className='relative flex flex-col min-h-screen justify-between'>
             {shouldDisplayAppNavBar && <AppNavBar />}
             <div className='mx-auto max-w-7xl sm:px-6 lg:px-8 w-full'>
-              {isError ? (
-                children
-              ) : isLoading ? (
-                <LoadingComponent />
-              ) : (
-                (removeServerErrorClass(),
-                showTosAndMarketingEmailsModal && (isCheckoutPage || isAccountPage) ? (
-                  <>
-                    <TosAndMarketingEmailsModal />
-                  </>
-                ) : (
-                  children
-                ))
-              )}
+              {isError ? children : isLoading ? <LoadingComponent /> : (removeServerErrorClass(), children)}
             </div>
             <FooterWrapper />
           </div>

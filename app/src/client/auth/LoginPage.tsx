@@ -1,41 +1,18 @@
-import { createTheme } from '@stitches/react';
-import { useAuth } from 'wasp/client/auth';
-import { useHistory } from 'react-router-dom';
-import { useEffect } from 'react';
-import { AuthWrapper } from './authWrapper';
-import Auth from './Auth';
-import imgUrl from '../static/logo.svg';
+import { LoginForm } from 'wasp/client/auth';
+// Wasp's type-safe Link component
+import { Link } from 'wasp/client/router';
 
-export enum State {
-  Login = 'login',
-  Signup = 'signup',
-}
-
-export default function Login() {
-  const history = useHistory();
-
-  const { data: user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      history.push('/');
-    }
-  }, [user, history]);
-
+export function LoginPage() {
   return (
-    <AuthWrapper>
-      <LoginForm logo={imgUrl} state={State.Login} />
-    </AuthWrapper>
+    <main>
+      {/** Wasp has built-in auth forms & flows, which you can customize or opt-out of, if you wish :)
+       * https://wasp-lang.dev/docs/guides/auth-ui
+       */}
+      <LoginForm />
+      <br />
+      <span>
+        I don't have an account yet (<Link to='/signup'>go to signup</Link>).
+      </span>
+    </main>
   );
-}
-
-export type CustomizationOptions = {
-  logo?: string;
-  socialLayout?: 'horizontal' | 'vertical';
-  appearance?: Parameters<typeof createTheme>[0];
-  state: State;
-};
-
-export function LoginForm({ appearance, logo, socialLayout, state }: CustomizationOptions) {
-  return <Auth appearance={appearance} logo={logo} socialLayout={socialLayout} state={state} />;
 }

@@ -9,10 +9,7 @@ import logo from '../static/logo.svg';
 import openSaasBanner from '../static/open-saas-banner.png';
 import { features, navigation, faqs, footerNavigation, testimonials } from './contentSections';
 import DropdownUser from '../components/DropdownUser';
-import { DOCS_URL } from '../../shared/constants';
 import { UserMenuItems } from '../components/UserMenuItems';
-import UserActionButton from '../components/UserActionButton';
-import DarkModeSwitcher from '../admin/components/DarkModeSwitcher';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -65,10 +62,6 @@ export default function LandingPage() {
           <div className='hidden lg:flex lg:flex-1 lg:justify-end lg:align-end'>
             {/* <!-- Dark Mode Toggler --> */}
             <div className='flex items-center gap-3 2xsm:gap-7'>
-              {/* <ul className='flex justify-center items-center gap-2 2xsm:gap-4'>
-                <DarkModeSwitcher />
-              </ul> */}
-              <UserActionButton user={user} renderGoToChat={false} theme='light' />
               {isUserLoading ? null : !user ? (
                 <Link to='/login'>
                   <div className='text-sm flex justify-end items-center duration-300 ease-in-out text-airt-font-base hover:text-airt-secondary dark:text-white'>
@@ -125,9 +118,6 @@ export default function LandingPage() {
                     <UserMenuItems user={user} />
                   )}
                 </div>
-                {/* <div className='py-6'>
-                  <DarkModeSwitcher />
-                </div> */}
               </div>
             </div>
           </Dialog.Panel>
@@ -147,7 +137,12 @@ export default function LandingPage() {
                   With some more exciting words about your product!
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
-                  <UserActionButton user={user} renderGoToChat={true} />
+                  <a
+                    href='/chat'
+                    className={`rounded-md px-3.5 py-2.5 text-sm  bg-airt-primary text-airt-font-base hover:bg-opacity-85 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                  >
+                    Go to chat <span aria-hidden='true'>→</span>
+                  </a>
                 </div>
               </div>
               <div className='mt-14 flow-root sm:mt-14 '>
