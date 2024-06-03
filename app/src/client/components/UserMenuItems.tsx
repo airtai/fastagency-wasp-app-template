@@ -24,7 +24,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
           <Link
             to='/account'
             onClick={handleMobileMenuClick}
-            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-airt-secondary'
+            className='flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-secondary'
           >
             <svg
               className='fill-current'
@@ -50,7 +50,7 @@ export const UserMenuItems = ({ user, setMobileMenuOpen }: { user?: Partial<User
       <button
         onClick={() => logout()}
         className={cn(
-          'flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-airt-secondary',
+          'flex items-center gap-3.5 py-4 text-sm font-medium duration-300 ease-in-out hover:text-secondary',
           {
             'sm:px-6': path !== '/admin',
             'px-6': path === '/admin',

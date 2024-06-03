@@ -10,12 +10,12 @@ interface AnimatedCharacterLoaderProps {
 
 const AnimatedCharacterLoader: React.FC<AnimatedCharacterLoaderProps> = ({
   loadingMessage = 'Loading...', // Default loading message
-  bgColor = 'airt-primary',
+  bgColor = 'primary',
   showLogo = true,
 }) => {
   const [frameIndex, setFrameIndex] = useState(0); // State to track the current frame of the animation
   const loadingAnimation = ['—', '\\', '|', '/']; // Characters used for the loading animation
-  const textColor = bgColor === 'airt-primary' ? 'airt-font-base' : 'airt-primary'; // Text color based on background color
+  const textColor = bgColor === 'primary' ? 'white' : 'primary'; // Text color based on background color
 
   useEffect(() => {
     // Set up an interval to cycle through the animation characters
@@ -34,7 +34,7 @@ const AnimatedCharacterLoader: React.FC<AnimatedCharacterLoaderProps> = ({
     >
       <div
         style={{ maxWidth: '800px', margin: 'auto' }}
-        className={`relative ml-3 block w-full p-4 pl-10 text-sm text-airt-font-base  border-airt-primary rounded-lg bg-${bgColor} `}
+        className={`relative ml-3 block w-full p-4 pl-10 text-sm text-white  border-primary rounded-lg bg-${bgColor} `}
       >
         {showLogo && (
           <span
@@ -47,7 +47,7 @@ const AnimatedCharacterLoader: React.FC<AnimatedCharacterLoaderProps> = ({
             }}
           >
             <span
-              className='bg-airt-font-base inline-block'
+              className='bg-white inline-block'
               style={{ borderRadius: '50%', width: '93%', height: '93%', paddingTop: '3px' }}
             >
               <img

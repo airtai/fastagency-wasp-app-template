@@ -15,7 +15,7 @@ const commonMessageStyles = {
 
 const MessageIcon = () => (
   <svg
-    className='animate-spin -ml-1 mr-3 h-5 w-5 text-airt-font-base'
+    className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
     viewBox='0 0 24 24'
@@ -32,12 +32,12 @@ const MessageIcon = () => (
 export default function LoadingComponent() {
   return (
     <div style={wrapperStyles}>
-      <div className='text-airt-font-base' style={commonMessageStyles}>
+      <div className='text-white' style={commonMessageStyles}>
         <div className='relative rounded-xl overflow-auto p-8'>
           <div className='flex items-center justify-center'>
             <button
               type='button'
-              className='inline-flex items-center px-4 py-2 leading-6 text-sm shadow rounded-md transition ease-in-out duration-150 cursor-not-allowed border border-airt-font-base'
+              className='inline-flex items-center px-4 py-2 leading-6 text-sm shadow rounded-md transition ease-in-out duration-150 cursor-not-allowed border border-white'
               disabled
             >
               <MessageIcon /> Loading...

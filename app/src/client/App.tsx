@@ -69,7 +69,7 @@ export default function App({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className='bg-gradient-to-b from-airt-hero-gradient-start via-airt-hero-gradient-middle to-airt-secondary min-h-screen dark:text-white dark:bg-boxdark-2'>
+      <div className='bg-gradient-to-b from-hero-gradient-start via-hero-gradient-middle to-secondary min-h-screen dark:text-white dark:bg-boxdark-2'>
         {isError && (addServerErrorClass(), (<ServerNotRechableComponent />))}
         {isChatPage ? (
           <>
@@ -95,10 +95,10 @@ const FooterWrapper: React.FC = () => {
   return (
     <div>
       <Footer />
-      <div className='flex items-center h-20 bg-airt-footer-copyrights'>
-        <p className='text-center w-full text-sm text-airt-font-base opacity-50'>
+      <div className='flex items-center h-20 bg-footer-copyrights'>
+        <p className='text-center w-full text-sm text-white opacity-50'>
           © 2024{' '}
-          <a href='#' className='text-sm leading-6 text-airt-font-base underline dark:text-white hover:opacity-80'>
+          <a href='#' className='text-sm leading-6 text-white underline dark:text-white hover:opacity-80'>
             {appName}
           </a>
           . All rights reserved.

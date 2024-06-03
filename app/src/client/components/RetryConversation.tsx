@@ -30,7 +30,7 @@ export default function RetryConversation({
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
-                className='rounded-md px-3.5 pt-2 pb-2.5 text-sm hover:bg-opacity-85 shadow-sm bg-airt-secondary text-airt-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                className='rounded-md px-3.5 pt-2 pb-2.5 text-sm hover:bg-opacity-85 shadow-sm bg-secondary text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                 onClick={() => handleSuggestionClick(suggestion, retryOnClick)}
               >
                 <Markdown>{suggestion}</Markdown>

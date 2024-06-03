@@ -10,7 +10,7 @@ export function LoginPage() {
       <Box mt={5}>
         <LoginForm appearance={authAppearance} />
         <Box ml={3}>
-          <span className='inline-block mt-1'>
+          <span className='inline-block mt-1 text-primary'>
             I don't have an account yet (
             <Link as={RRLink} to='/signup' textDecoration='underline'>
               go to signup

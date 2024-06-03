@@ -39,7 +39,7 @@ const DropdownUser = ({ user }: { user: AuthUser }) => {
       <button
         ref={trigger}
         onClick={toggleDropdown}
-        className='flex items-center gap-4 duration-300 ease-in-out text-airt-font-base hover:text-airt-secondary'
+        className='flex items-center gap-4 duration-300 ease-in-out text-white hover:text-secondary'
       >
         <span className='hidden text-right lg:block'>
           <span className='block text-sm font-medium dark:text-white'>{getUsername(user)}</span>
