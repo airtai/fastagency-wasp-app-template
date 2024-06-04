@@ -105,13 +105,9 @@ jobs:
         working-directory: app
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
 
         run: |
           wasp deploy fly deploy
           wasp deploy fly cmd secrets set \
-          GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
-          GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
           FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID --context=server
