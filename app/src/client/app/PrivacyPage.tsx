@@ -1,5 +1,6 @@
 export default function PrivacyPage() {
   const appName = import.meta.env.REACT_APP_NAME || 'Your SaaS';
+  const supportEmail = import.meta.env.REACT_APP_SUPPORT_EMAIL;
   return (
     <div>
       <div className='mx-auto max-w-2xl pl-10 pr-10 text-white pt-10 pb-24 sm:pb-32 lg:gap-x-8 lg:py-5 lg:px-8'>
@@ -90,6 +91,15 @@ export default function PrivacyPage() {
               </li>
             </ul>
           </section>
+          {supportEmail && (
+            <section className='mb-8'>
+              <h2 className='text-xl font-semibold mb-2'>Contact Us</h2>
+              <p>
+                In order to receive further information regarding use of the Site, please contact us at:{' '}
+                <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+              </p>
+            </section>
+          )}
         </div>
       </div>
     </div>
