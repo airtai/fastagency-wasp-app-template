@@ -95,13 +95,23 @@ const FooterWrapper: React.FC = () => {
   return (
     <div>
       <Footer />
-      <div className='flex items-center h-20 bg-footer-copyrights'>
-        <p className='text-center w-full text-sm text-white opacity-50'>
+      <div className='flex flex-col items-center h-20 bg-footer-copyrights'>
+        <p className='text-center w-full text-sm text-white opacity-50 mt-5'>
           © 2024{' '}
           <a href='#' className='text-sm leading-6 text-white underline dark:text-white hover:opacity-80'>
             {appName}
           </a>
           . All rights reserved.
+        </p>
+        <p className='text-center w-full text-sm text-white opacity-50'>
+          Built with ❤️ using{' '}
+          <a
+            target='_blank'
+            href='https://fastagency.ai/'
+            className='text-sm leading-6 text-white underline dark:text-white hover:opacity-80'
+          >
+            FastAgency
+          </a>
         </p>
       </div>
     </div>

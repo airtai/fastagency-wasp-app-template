@@ -144,14 +144,13 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
       </div>
       {/* <!-- SIDEBAR HEADER --> */}
 
-      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
+      <h3 className='mb-4 ml-4 text-sm font-semibold text-bodydark2'>CHATS</h3>
+      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear' style={{ height: '68%' }}>
         {/* <!-- Sidebar Menu --> */}
 
         <nav className='mt-1 py-1 px-4 '>
           {/* <!-- Menu Group --> */}
           <div>
-            <h3 className='mb-4 ml-4 text-sm font-semibold text-bodydark2'>CHATS</h3>
-
             <ul className='mb-6 flex flex-col gap-1.5'>
               {/* <!-- Menu Item Dashboard --> */}
               <li>
@@ -198,6 +197,16 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
         </nav>
         {/* <!-- Sidebar Menu --> */}
       </div>
+      <p className='mt-3 text-center w-full text-sm text-white opacity-50'>
+        Built with ❤️ using{' '}
+        <a
+          target='_blank'
+          href='https://fastagency.ai/'
+          className='text-sm leading-6 text-white underline dark:text-white hover:opacity-80'
+        >
+          FastAgency
+        </a>
+      </p>
     </aside>
   );
 };
