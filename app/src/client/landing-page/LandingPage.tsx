@@ -131,10 +131,11 @@ export default function LandingPage() {
             <div className='mx-auto max-w-8xl px-6 lg:px-8'>
               <div className='lg:mb-18 mx-auto max-w-5xl text-center'>
                 <h1 className='text-4xl font-rubik text-white sm:text-6xl dark:text-white'>
-                  Some <span className='italic'>cool</span> words about your product
+                  Introducing <span className='italic'>{appName}</span>: Your AI-Powered Chat Solution
                 </h1>
                 <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-white dark:text-white'>
-                  With some more exciting words about your product!
+                  Elevate your customer engagement with {appName}, the AI-powered chat solution that delivers
+                  personalized responses and evolves with your business needs.
                 </p>
                 <div className='mt-10 flex items-center justify-center gap-x-6'>
                   {user ? (
@@ -193,52 +194,21 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Testimonial section */}
-        <div className='mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8'>
-          <div className='relative sm:left-5 -m-2 rounded-xl bg-primary lg:ring-1 lg:ring-primary lg:-m-4 '>
-            <div className='relative sm:top-5 sm:right-5 bg-white dark:bg-boxdark px-8 py-20 shadow-xl sm:rounded-xl sm:px-10 sm:py-16 md:px-12 lg:px-20'>
-              <h2 className='text-left text-xl font-semibold tracking-wide leading-7 text-primary dark:text-white'>
-                What Our Users Say
-              </h2>
-              <div className='relative flex flex-wrap gap-6 w-full mt-6 z-10 justify-between lg:mx-0'>
-                {testimonials.map((testimonial) => (
-                  <figure
-                    key={testimonial.name}
-                    className='w-full lg:w-1/4 box-content flex flex-col justify-between p-8 rounded-xl bg-primary '
-                  >
-                    <blockquote className='text-lg text-white sm:text-md sm:leading-8'>
-                      <p>{testimonial.quote}</p>
-                    </blockquote>
-                    <figcaption className='mt-6 text-base text-white'>
-                      <a href={testimonial.socialUrl} className='flex items-center gap-x-2'>
-                        <img src={testimonial.avatarSrc} className='h-12 w-12 rounded-full' />
-                        <div>
-                          <div className='font-semibold hover:underline'>{testimonial.name}</div>
-                          <div className='mt-1'>{testimonial.role}</div>
-                        </div>
-                      </a>
-                    </figcaption>
-                  </figure>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
         {/* FAQ */}
-        <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
-          <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
+        <div className='mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-7xl lg:px-8 lg:py-32'>
+          <h2 className='text-2xl font-bold leading-10 tracking-tight text-white dark:text-white'>
             Frequently asked questions
           </h2>
           <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
             {faqs.map((faq) => (
               <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
-                <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>
+                <dt className='text-base font-semibold leading-7 text-white lg:col-span-5 dark:text-white'>
                   {faq.question}
                 </dt>
                 <dd className='flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0'>
-                  <p className='text-base leading-7 text-primary dark:text-white'>{faq.answer}</p>
+                  <p className='text-white leading-7 text-primary dark:text-white'>{faq.answer}</p>
                   {faq.href && (
-                    <a href={faq.href} className='text-base leading-7 text-primary hover:opacity-80'>
+                    <a href={faq.href} className='text-white leading-7 text-primary hover:opacity-80'>
                       Learn more →
                     </a>
                   )}
