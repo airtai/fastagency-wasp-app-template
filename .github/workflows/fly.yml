@@ -106,8 +106,10 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
+          REACT_APP_NAME: ${{ vars.REACT_APP_NAME }}
+          REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
 
         run: |
           wasp deploy fly deploy
-          wasp deploy fly cmd secrets set \
+          REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
           FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID --context=server
