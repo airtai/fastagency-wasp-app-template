@@ -145,7 +145,7 @@ const ChatSidebar = ({ sidebarOpen, setSidebarOpen, refetchAllChatDetails }: Cha
       {/* <!-- SIDEBAR HEADER --> */}
 
       <h3 className='mb-4 ml-4 text-sm font-semibold text-bodydark2'>CHATS</h3>
-      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear' style={{ height: '68%' }}>
+      <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear h-[calc(100vh-328px)]'>
         {/* <!-- Sidebar Menu --> */}
 
         <nav className='mt-1 py-1 px-4 '>
