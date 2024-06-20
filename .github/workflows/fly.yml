@@ -56,7 +56,9 @@ jobs:
           APP_NAME=${REACT_APP_NAME// /-}-$TIMESTAMP
           APP_NAME=${APP_NAME,,}
           echo "Setting up the app with name: $APP_NAME"
-          wasp deploy fly launch $APP_NAME mia
+          wasp deploy fly setup $APP_NAME mia
+          wasp deploy fly create-db mia
+          wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
           FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
         working-directory: app
