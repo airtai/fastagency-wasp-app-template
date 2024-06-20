@@ -54,14 +54,20 @@ jobs:
 
       - name: Run the wasp fly setup and create-db commands
         run: |
-          UUID=$(uuidgen)
-          APP_NAME=fastagency-app-$UUID
+          TIMESTAMP=$(date +%s)
+          APP_NAME=${REACT_APP_NAME// /-}-$TIMESTAMP
+          APP_NAME=${APP_NAME,,}
           echo "Setting up the app with name: $APP_NAME"
-          wasp deploy fly setup $APP_NAME mia
-          wasp deploy fly create-db mia
+          wasp deploy fly launch $APP_NAME mia
+          REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
+          FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
         working-directory: app
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
+          REACT_APP_NAME: ${{ vars.REACT_APP_NAME }}
+          REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
+          FASTAGENCY_SERVER_URL: ${{ vars.FASTAGENCY_SERVER_URL }}
 
       - name: Create Pull Request
         id: cpr
@@ -79,10 +85,9 @@ jobs:
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
 
-
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == 'false'
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && github.event.pull_request.body != 'This is an automated pull request to add the Fly.io configuration files.'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -108,8 +113,9 @@ jobs:
           FASTAGENCY_APPLICATION_UUID: ${{ secrets.FASTAGENCY_APPLICATION_UUID }}
           REACT_APP_NAME: ${{ vars.REACT_APP_NAME }}
           REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
+          FASTAGENCY_SERVER_URL: ${{ vars.FASTAGENCY_SERVER_URL }}
 
         run: |
           wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
-          FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID --context=server
+          FASTAGENCY_APPLICATION_UUID=$FASTAGENCY_APPLICATION_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
