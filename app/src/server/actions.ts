@@ -230,7 +230,7 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
   const applicationUUID = process.env.FASTAGENCY_APPLICATION_UUID;
   const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
   console.log('===========');
-  console.log('Sending message to application: ', applicationUUID);
+  console.log('Sending message to: ', url);
   console.log('===========');
   try {
     const response = await fetch(url, {

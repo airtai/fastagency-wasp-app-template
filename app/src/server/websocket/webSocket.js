@@ -54,8 +54,6 @@ export const socketFn = (io, context) => {
     if (socket.data.user) {
       const userEmail = socket.data.user.email;
       const userUUID = socket.data.user.uuid;
-      console.log('========');
-      console.log('a user connected: ', userEmail);
 
       socket.on(
         'sendMessageToTeam',
