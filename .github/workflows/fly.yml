@@ -1,9 +1,7 @@
 name: Fly Deployment Pipeline
 
 on:
-  workflow_run:
-    workflows: ['Pipeline']
-    types: [completed]
+  push:
     branches:
       - main
   # or manually
@@ -52,7 +50,7 @@ jobs:
       
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Run the wasp fly setup and create-db commands
+      - name: Deploy wasp application to fly
         run: |
           TIMESTAMP=$(date +%s)
           APP_NAME=${REACT_APP_NAME// /-}-$TIMESTAMP
@@ -87,7 +85,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && github.event.pull_request.body != 'This is an automated pull request to add the Fly.io configuration files.'
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && !contains(github.event.pull_request.body, 'This is an automated pull request to add the Fly.io configuration files.')
     runs-on: ubuntu-latest
     permissions:
       contents: read
