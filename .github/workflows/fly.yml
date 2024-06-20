@@ -2,8 +2,7 @@ name: Fly Deployment Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main"]
   # or manually
   workflow_dispatch:
 
@@ -15,9 +14,26 @@ jobs:
       packages: write
     outputs:
       is_setup: ${{ steps.checkfiles.outputs.is_setup }}
+      is_setup_pr: ${{ steps.pr_check.outputs.is_pr_for_setup }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - uses: 8BitJonny/gh-get-current-pr@3.0.0
+        id: PR
+      - run: |
+          echo "Your PR number is ${{ steps.PR.outputs.number }} and its JSON is ${{ steps.PR.outputs.pr }}"
+          echo "Your PR body is ${{ steps.PR.outputs.pr_body }}"
+
+          if [[ "${{ steps.PR.outputs.pr_body }}" == "This is an automated pull request to add the Fly.io configuration files." ]]; then
+            echo "is_pr_for_setup=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_pr_for_setup=false" >> $GITHUB_OUTPUT
+          fi
+          echo "The value of is_pr_for_setup is:"
+          cat $GITHUB_OUTPUT
+        id: pr_check
+        shell: bash
 
       - name: Check if the fly-client.toml and fly-server.toml files exist
         id: checkfiles
@@ -87,7 +103,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && !contains(github.event.pull_request.body, 'This is an automated pull request to add the Fly.io configuration files.')
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && needs.check_which_job_to_run.outputs.is_setup_pr == 'false'
     runs-on: ubuntu-latest
     permissions:
       contents: read
