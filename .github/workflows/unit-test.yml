@@ -1,0 +1,28 @@
+name: Pipeline
+on: [push, workflow_dispatch]
+
+jobs:
+    unit_test:
+      name: Run tests and verify build
+      runs-on: ubuntu-latest
+      permissions:
+          contents: read
+          packages: write
+      steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: 20
+
+          - name: Install wasp
+            run: curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+
+          - name: Run client tests
+            run: cd app && wasp test client run --silent
+
+          - name: Build wasp
+            run: cd app && wasp build
+          
+          - name: Verify build
+            run: cd app && cd .wasp/build/web-app && npm install && REACT_APP_API_URL="http://this-is-a-test-url" npm run build
