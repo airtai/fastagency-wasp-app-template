@@ -10,8 +10,79 @@ on:
   workflow_dispatch:
 
 jobs:
+  check_which_job_to_run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      is_setup: ${{ steps.checkfiles.outputs.is_setup }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if the fly-client.toml and fly-server.toml files exist
+        id: checkfiles
+        run: |
+          echo "Listing all files in app directory:"
+          ls -la app
+          [ -f app/fly-client.toml ] || [ -f app/fly-server.toml ] && echo "is_setup=false" >> $GITHUB_OUTPUT || echo "is_setup=true" >> $GITHUB_OUTPUT
+          echo "The value of is_setup is:"
+          cat $GITHUB_OUTPUT
+        shell: bash
+
+  onetime_app_setup:
+    needs: check_which_job_to_run
+    if: needs.check_which_job_to_run.outputs.is_setup == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install wasp
+        run: |
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh
+          echo "$HOME/.wasp/bin" >> $GITHUB_PATH
+      
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Run the wasp fly setup and create-db commands
+        run: |
+          UUID=$(uuidgen)
+          APP_NAME=fastagency-app-$UUID
+          echo "Setting up the app with name: $APP_NAME"
+          wasp deploy fly setup $APP_NAME mia
+          wasp deploy fly create-db mia
+        working-directory: app
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: "main"
+          title: "Add Fly.io configuration files"
+          commit-message: "Add Fly.io configuration files"
+          body: "This is an automated pull request to add the Fly.io configuration files."
+      
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+
+
 
   deployment:
+    needs: check_which_job_to_run
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,7 +90,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: 20
 
