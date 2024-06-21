@@ -10,6 +10,8 @@ function generateNatsUrl(natsUrl: string | undefined, fastAgencyServerUrl: strin
 const NATS_URL = generateNatsUrl(process.env['NATS_URL'], FASTAGENCY_SERVER_URL);
 console.log(`NATS_URL=${NATS_URL}`);
 
+const timeoutErrorMsg = 'Oops! Something went wrong. Please create a new chat and try again.';
+
 class NatsConnectionManager {
   public static connections: Map<
     string,
@@ -19,6 +21,7 @@ class NatsConnectionManager {
       socketConversationHistory: string;
       lastSocketMessage: string | null;
       conversationId: number;
+      timeoutId: NodeJS.Timeout | null;
     }
   > = new Map();
 
@@ -31,6 +34,7 @@ class NatsConnectionManager {
         socketConversationHistory: '',
         lastSocketMessage: null,
         conversationId: conversationId,
+        timeoutId: null,
       });
       console.log(`Connected to ${nc.getServer()} for threadId ${threadId}`);
     }
@@ -87,6 +91,22 @@ class NatsConnectionManager {
       connection.socketConversationHistory = '';
     }
   }
+
+  static setTimeout(threadId: string, callback: () => void, delay: number) {
+    const connection = this.connections.get(threadId);
+    if (connection) {
+      this.clearTimeout(threadId);
+      connection.timeoutId = setTimeout(callback, delay);
+    }
+  }
+
+  static clearTimeout(threadId: string) {
+    const connection = this.connections.get(threadId);
+    if (connection && connection.timeoutId) {
+      clearTimeout(connection.timeoutId);
+      connection.timeoutId = null;
+    }
+  }
 }
 
 async function setupSubscription(
@@ -110,6 +130,7 @@ async function setupSubscription(
   }
   (async () => {
     for await (const m of sub) {
+      NatsConnectionManager.clearTimeout(threadId); // Clear the timeout if a message is received
       const conversationHistory = NatsConnectionManager.getConversationHistory(threadId);
       const conversationId = NatsConnectionManager.getConversationId(threadId);
       const jm = jc.decode(m.data);
@@ -136,7 +157,7 @@ async function setupSubscription(
           );
           if (isChatTerminated) {
             console.log('Terminating chat and cleaning up NATS connection and subscriptions.');
-            NatsConnectionManager.cleanup(threadId);
+            await NatsConnectionManager.cleanup(threadId);
           }
         } catch (err) {
           console.error(`DB Update failed: ${err}`);
@@ -178,6 +199,15 @@ export async function sendMsgToNatsServer(
     console.log(payload);
     console.log('-----------');
     await js.publish(subject, jc.encode(payload));
+
+    const timeoutCallback = async () => {
+      console.error(`No response received in 45 seconds for ${subject}`);
+      await updateDB(context, currentChatDetails.id, timeoutErrorMsg, conversationId, '', true);
+      await NatsConnectionManager.cleanup(threadId);
+      socket.emit('streamFromTeamFinished');
+    };
+
+    NatsConnectionManager.setTimeout(threadId, timeoutCallback, 45000);
 
     if (shouldCallInitiateChat) {
       const clientInputSubject = `chat.client.messages.${threadId}`;
