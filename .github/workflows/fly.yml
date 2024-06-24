@@ -73,6 +73,11 @@ jobs:
           APP_NAME=${APP_NAME,,}
           echo "Setting up the app with name: $APP_NAME"
           wasp deploy fly setup $APP_NAME mia
+          echo "Updating the machine configuration in the fly toml files"
+          for file in fly-client.toml fly-server.toml
+          do
+            sed -i 's/cpus = 1/cpus = 4/g' $file
+          done
           wasp deploy fly create-db mia
           wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
