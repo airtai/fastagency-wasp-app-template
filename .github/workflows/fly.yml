@@ -77,6 +77,8 @@ jobs:
           for file in fly-client.toml fly-server.toml
           do
             sed -i 's/cpus = 1/cpus = 4/g' $file
+            sed -i 's/auto_stop_machines = true/auto_stop_machines = false/g' $file
+            sed -i 's/auto_start_machines = true/auto_start_machines = false/g' $file
             sed -i 's/min_machines_running = 0/min_machines_running = 1/g' $file
           done
           wasp deploy fly create-db mia
