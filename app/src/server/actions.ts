@@ -227,8 +227,8 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
     throw new HttpError(401);
   }
 
-  const applicationUUID = process.env.FASTAGENCY_APPLICATION_UUID;
-  const url = `${FASTAGENCY_SERVER_URL}/application/${applicationUUID}/chat`;
+  const deploymentUUID = process.env.FASTAGENCY_DEPLOYMENT_UUID;
+  const url = `${FASTAGENCY_SERVER_URL}/deployment/${deploymentUUID}/chat`;
   console.log('===========');
   console.log('Sending message to: ', url);
   console.log('===========');
