@@ -136,7 +136,7 @@ async function setupSubscription(
       const jm = jc.decode(m.data);
       const type = jm.type;
       let message = jm.data.msg || jm.data.prompt;
-      // console.log(`Received ${type} message: `, message);
+      console.log(`Received ${type} message: `, message);
       if (type === 'print') {
         NatsConnectionManager.updateMessageHistory(threadId, message);
         socket.emit('newMessageFromTeam', conversationHistory);
@@ -162,6 +162,7 @@ async function setupSubscription(
         } catch (err) {
           console.error(`DB Update failed: ${err}`);
         } finally {
+          console.log('Sending streamFromTeamFinished event');
           socket.emit('streamFromTeamFinished');
         }
       }
