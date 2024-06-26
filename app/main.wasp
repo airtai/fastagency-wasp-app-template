@@ -212,6 +212,11 @@ action getAgentResponse {
   entities: [Chat, Conversation]
 }
 
+action pingServer {
+  fn: import { pingServer } from "@src/server/actions.js",
+  entities: []
+}
+
 // 📚 Queries
 
 query getChat {
@@ -233,4 +238,3 @@ query getChatFromUUID {
   fn: import { getChatFromUUID } from "@src/server/queries.js",
   entities: [Chat]
 }
-
