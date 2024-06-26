@@ -76,14 +76,14 @@ jobs:
           echo "Updating the machine configuration in the fly toml files"
           for file in fly-client.toml fly-server.toml
           do
-            sed -i 's/cpus = 1/cpus = 4/g' $file
-            sed -i 's/auto_stop_machines = true/auto_stop_machines = false/g' $file
-            sed -i 's/auto_start_machines = true/auto_start_machines = false/g' $file
+            sed -i 's/min_machines_running = 0/min_machines_running = 1/g' $file
           done
           wasp deploy fly create-db mia
           wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
           FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
+          flyctl scale count 1 --app ${APP_NAME}-client --yes
+          flyctl scale count 1 --app ${APP_NAME}-server --yes
         working-directory: app
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
