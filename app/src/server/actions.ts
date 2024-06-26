@@ -268,7 +268,8 @@ export const pingServer: PingServer<void, any> = async (args: any, context: any)
     throw new HttpError(401);
   }
 
-  const url = `${FASTAGENCY_SERVER_URL}/deployment/ping`;
+  const deploymentUUID = process.env.FASTAGENCY_DEPLOYMENT_UUID;
+  const url = `${FASTAGENCY_SERVER_URL}/deployment/${deploymentUUID}/ping`;
   try {
     const response = await fetch(url, {
       method: 'GET',
