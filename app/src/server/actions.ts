@@ -11,6 +11,7 @@ import {
   type GetAgentResponse,
   type DeleteLastConversationInChat,
   type RetryTeamChat,
+  type PingServer,
 } from 'wasp/server/operations';
 
 import { FASTAGENCY_SERVER_URL } from './common/constants';
@@ -259,5 +260,27 @@ export const getAgentResponse: GetAgentResponse<AgentPayload, Record<string, any
     };
   } catch (error: any) {
     throw new HttpError(500, 'Something went wrong. Please try again later');
+  }
+};
+
+export const pingServer: PingServer<void, any> = async (args: any, context: any) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const url = `${FASTAGENCY_SERVER_URL}/deployment/ping`;
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const json: any = (await response.json()) as { detail?: string };
+    if (!response.ok) {
+      throw new Error('Unable to reach the server. Please try again later.');
+    }
+    return json.detail;
+  } catch (error: any) {
+    throw new HttpError(500, 'Unable to reach the server. Please try again later.');
   }
 };

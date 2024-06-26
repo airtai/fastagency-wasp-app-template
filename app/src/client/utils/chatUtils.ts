@@ -5,7 +5,10 @@ import {
   createNewAndReturnLastConversation,
   getAgentResponse,
   deleteLastConversationInChat,
+  pingServer,
 } from 'wasp/client/operations';
+
+import { retryFunction } from './commonUtils';
 
 import { type Conversation, type Chat } from 'wasp/entities';
 
@@ -104,6 +107,8 @@ export const initiateChat = async (
   messages: any,
   refetchChatDetails: () => void
 ) => {
+  console.log('Ping server before initiating chat.');
+  await retryFunction(pingServer, 3, 30000); // 30 seconds
   const response = await getAgentResponse({ chatId: activeChatId });
   await handleAgentResponse(
     response,
