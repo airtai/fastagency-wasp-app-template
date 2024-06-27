@@ -11,6 +11,7 @@ interface ChatFormProps {
 
 export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
   const [formInputValue, setFormInputValue] = useState('');
+  const [disableFormSubmit, setDisableFormSubmit] = useState(false);
   const history = useHistory();
 
   const formInputRef = useCallback(
@@ -22,6 +23,13 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
     },
     [triggerChatFormSubmitMsg]
   );
+
+  useEffect(() => {
+    if (currentChatDetails) {
+      currentChatDetails.team_status === 'inprogress' && setDisableFormSubmit(true);
+      currentChatDetails.team_status !== 'inprogress' && setDisableFormSubmit(false);
+    }
+  }, [currentChatDetails]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,14 +62,17 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
             name='search'
             className='block rounded-lg w-full h-12 text-sm text-white bg-primary focus:outline-none focus:ring-0 focus:border-captn-light-blue'
             placeholder='Enter your message...'
-            // required
+            required
             ref={formInputRef}
             value={formInputValue}
             onChange={(e) => setFormInputValue(e.target.value)}
+            disabled={disableFormSubmit}
           />
           <button
             type='submit'
-            className={`text-primary bg-secondary hover:opacity-90 absolute right-2 font-medium rounded-lg text-sm px-1.5 py-1.5`}
+            className={`text-primary bg-secondary hover:opacity-90 absolute right-2 font-medium rounded-lg text-sm px-1.5 py-1.5 ${
+              disableFormSubmit ? 'cursor-not-allowed bg-white opacity-70 hover:opacity-70' : 'cursor-pointer'
+            }`}
           >
             <span className=''>
               <svg width='24' height='24' viewBox='0 0 24 24' fill='none' className='text-primary'>
