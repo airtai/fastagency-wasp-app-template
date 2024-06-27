@@ -26,8 +26,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   useEffect(() => {
     if (currentChatDetails) {
-      currentChatDetails.team_status === 'inprogress' && setDisableFormSubmit(true);
-      currentChatDetails.team_status !== 'inprogress' && setDisableFormSubmit(false);
+      setDisableFormSubmit(currentChatDetails.team_status === 'inprogress');
     }
   }, [currentChatDetails]);
 
