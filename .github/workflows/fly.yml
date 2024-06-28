@@ -69,7 +69,7 @@ jobs:
       - name: Deploy wasp application to fly
         run: |
           TIMESTAMP=$(date +%s)
-          APP_NAME=${REACT_APP_NAME// /-}-$TIMESTAMP
+          APP_NAME=fa-${REACT_APP_NAME// /-}-$TIMESTAMP
           APP_NAME=${APP_NAME,,}
           echo "Setting up the app with name: $APP_NAME"
           wasp deploy fly setup $APP_NAME mia
