@@ -1,5 +1,8 @@
-import { type Chat } from 'wasp/entities';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+
+import _ from 'lodash';
+
+import { type Chat } from 'wasp/entities';
 import { createNewChat } from 'wasp/client/operations';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -13,6 +16,7 @@ interface ChatFormProps {
 export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
   const [formInputValue, setFormInputValue] = useState('');
   const [disableFormSubmit, setDisableFormSubmit] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const history = useHistory();
 
   const formInputRef = useCallback(
@@ -35,26 +39,38 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
     const msgToSubmit = formInputValue.trim();
-    if (!currentChatDetails) {
-      try {
+    setIsSubmitting(true);
+
+    try {
+      if (!currentChatDetails) {
         const chat: Chat = await createNewChat();
         history.push(`/chat/${chat.uuid}?initiateChatMsg=${msgToSubmit}`);
         setFormInputValue('');
-      } catch (err: any) {
-        console.log('Error: ' + err.message);
-        window.alert('Error: Something went wrong. Please try again later.');
+      } else if (
+        currentChatDetails &&
+        !currentChatDetails.showLoader &&
+        currentChatDetails.team_status !== 'inprogress'
+      ) {
+        setFormInputValue('');
+        handleFormSubmit(msgToSubmit);
       }
-    }
-    if (currentChatDetails && !currentChatDetails.showLoader && currentChatDetails.team_status !== 'inprogress') {
-      setFormInputValue('');
-      handleFormSubmit(msgToSubmit);
+    } catch (err: any) {
+      console.log('Error: ' + err.message);
+      window.alert('Error: Something went wrong. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  const debouncedHandleSubmit = _.debounce(handleSubmit, 500);
+
   return (
     <div className='mt-2 mb-2'>
-      <form data-testid='chat-form' onSubmit={handleSubmit} className=''>
+      <form data-testid='chat-form' onSubmit={debouncedHandleSubmit} className=''>
         <label htmlFor='search' className='mb-2 text-sm font-medium text-captn-dark-blue sr-only dark:text-white'>
           Search
         </label>
@@ -78,7 +94,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleSubmit(e as any);
+                debouncedHandleSubmit(e as any);
               }
             }}
           />
