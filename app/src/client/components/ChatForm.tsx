@@ -56,8 +56,6 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
         currentChatDetails.team_status !== 'inprogress'
       ) {
         setFormInputValue('');
-        console.log('Calling handleFormSubmit');
-        console.log(currentChatDetails);
         handleFormSubmit(msgToSubmit);
       }
     } catch (err: any) {
