@@ -12,6 +12,7 @@ interface ChatFormProps {
 export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
   const [formInputValue, setFormInputValue] = useState('');
   const [disableFormSubmit, setDisableFormSubmit] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const history = useHistory();
 
   const formInputRef = useCallback(
@@ -32,14 +33,20 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
     if (!currentChatDetails) {
       try {
+        setIsSubmitting(true);
         const chat: Chat = await createNewChat();
         history.push(`/chat/${chat.uuid}?initiateChatMsg=${formInputValue}`);
         setFormInputValue('');
       } catch (err: any) {
         console.log('Error: ' + err.message);
         window.alert('Error: Something went wrong. Please try again later.');
+      } finally {
+        setIsSubmitting(false);
       }
     }
     if (currentChatDetails && !currentChatDetails.showLoader && currentChatDetails.team_status !== 'inprogress') {
