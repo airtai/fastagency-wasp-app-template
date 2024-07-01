@@ -40,8 +40,6 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log('isSubmitting: ', isSubmitting);
-
     if (isSubmitting) return;
 
     const msgToSubmit = formInputValue.trim();
