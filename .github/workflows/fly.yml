@@ -84,6 +84,7 @@ jobs:
           FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
           flyctl scale count 1 --app ${APP_NAME}-client --yes
           flyctl scale count 1 --app ${APP_NAME}-server --yes
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
         working-directory: app
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -92,6 +93,11 @@ jobs:
           FLY_IO_APP_NAME: ${{ vars.FLY_IO_APP_NAME }}
           REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
           FASTAGENCY_SERVER_URL: ${{ vars.FASTAGENCY_SERVER_URL }}
+
+      - name: Add the website url to the repository description
+        run: gh repo edit --homepage "https://${APP_NAME}-client.fly.dev"
+        env:
+          GH_TOKEN: ${{ secrets.USER_GH_PAT }}
 
       - name: Create Pull Request
         id: cpr
