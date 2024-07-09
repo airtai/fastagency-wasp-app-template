@@ -81,7 +81,7 @@ jobs:
           wasp deploy fly create-db mia
           wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
-          FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
+          FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL AUTH_TOKEN=$AUTH_TOKEN --context=server
           flyctl scale count 1 --app ${APP_NAME}-client --yes
           flyctl scale count 1 --app ${APP_NAME}-server --yes
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
@@ -89,6 +89,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FASTAGENCY_DEPLOYMENT_UUID: ${{ secrets.FASTAGENCY_DEPLOYMENT_UUID }}
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
           REACT_APP_NAME: ${{ vars.REACT_APP_NAME }}
           FLY_IO_APP_NAME: ${{ vars.FLY_IO_APP_NAME }}
           REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
@@ -141,6 +142,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FASTAGENCY_DEPLOYMENT_UUID: ${{ secrets.FASTAGENCY_DEPLOYMENT_UUID }}
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
           REACT_APP_NAME: ${{ vars.REACT_APP_NAME }}
           REACT_APP_SUPPORT_EMAIL: ${{ vars.REACT_APP_SUPPORT_EMAIL }}
           FASTAGENCY_SERVER_URL: ${{ vars.FASTAGENCY_SERVER_URL }}
@@ -148,4 +150,4 @@ jobs:
         run: |
           wasp deploy fly deploy
           REACT_APP_NAME=$REACT_APP_NAME REACT_APP_SUPPORT_EMAIL=$REACT_APP_SUPPORT_EMAIL wasp deploy fly cmd secrets set \
-          FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL --context=server
+          FASTAGENCY_DEPLOYMENT_UUID=$FASTAGENCY_DEPLOYMENT_UUID FASTAGENCY_SERVER_URL=$FASTAGENCY_SERVER_URL AUTH_TOKEN=$AUTH_TOKEN --context=server

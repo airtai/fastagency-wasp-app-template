@@ -10,6 +10,9 @@ function generateNatsUrl(natsUrl: string | undefined, fastAgencyServerUrl: strin
 const NATS_URL = generateNatsUrl(process.env['NATS_URL'], FASTAGENCY_SERVER_URL);
 console.log(`NATS_URL=${NATS_URL}`);
 
+const AUTH_TOKEN = process.env['AUTH_TOKEN'];
+const FASTAGENCY_DEPLOYMENT_UUID = process.env['FASTAGENCY_DEPLOYMENT_UUID'];
+
 const timeoutErrorMsg = 'Oops! Something went wrong. Please create a new chat and try again.';
 
 class NatsConnectionManager {
@@ -27,16 +30,26 @@ class NatsConnectionManager {
 
   static async getConnection(threadId: string, conversationId: number) {
     if (!this.connections.has(threadId)) {
-      const nc = await connect({ servers: NATS_URL });
-      this.connections.set(threadId, {
-        nc,
-        subscriptions: new Map(),
-        socketConversationHistory: '',
-        lastSocketMessage: null,
-        conversationId: conversationId,
-        timeoutId: null,
-      });
-      console.log(`Connected to ${nc.getServer()} for threadId ${threadId}`);
+      try {
+        const token = {
+          user: FASTAGENCY_DEPLOYMENT_UUID,
+          password: AUTH_TOKEN,
+          chat_uuid: threadId,
+        };
+        const nc = await connect({ servers: NATS_URL, token: JSON.stringify(token) });
+        this.connections.set(threadId, {
+          nc,
+          subscriptions: new Map(),
+          socketConversationHistory: '',
+          lastSocketMessage: null,
+          conversationId: conversationId,
+          timeoutId: null,
+        });
+        console.log(`Connected to ${nc.getServer()} for threadId ${threadId}`);
+      } catch (error: any) {
+        console.error('Failed to connect to NATS server for threadId %s:', threadId, error);
+        throw new Error(`${error}`);
+      }
     }
     return this.connections.get(threadId);
   }
@@ -184,7 +197,9 @@ export async function sendMsgToNatsServer(
 ) {
   try {
     const threadId = currentChatDetails.uuid;
-    const { nc } = (await NatsConnectionManager.getConnection(threadId, conversationId)) as { nc: any };
+    const { nc } = (await NatsConnectionManager.getConnection(threadId, conversationId)) as {
+      nc: any;
+    };
     const js = nc.jetstream();
     const jc = JSONCodec();
 
@@ -216,7 +231,9 @@ export async function sendMsgToNatsServer(
     } else {
       NatsConnectionManager.setConversationId(threadId, conversationId);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(`Error in connectToNatsServer: ${err}`);
+    await updateDB(context, currentChatDetails.id, err.toString(), conversationId, '', true);
+    socket.emit('streamFromTeamFinished');
   }
 }
