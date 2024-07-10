@@ -139,7 +139,7 @@ async function setupSubscription(
     NatsConnectionManager.addSubscription(threadId, subject, sub as Subscription);
   } catch (err) {
     console.error(`Error in subscribe for ${subject}: ${err}`);
-    return;
+    throw new Error(`${err}`);
   }
   (async () => {
     for await (const m of sub) {
