@@ -205,11 +205,17 @@ export async function sendMsgToNatsServer(
 
     // Initiate chat or continue conversation
     const initiateChatSubject = `chat.server.initiate_chat`;
-    const serverInputSubject = `chat.server.messages.${threadId}`;
+    const serverInputSubject = `chat.server.messages.${userUUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
     const subject = shouldCallInitiateChat ? initiateChatSubject : serverInputSubject;
 
     NatsConnectionManager.clearConversationHistory(threadId);
-    const payload = { user_id: userUUID, thread_id: threadId, team_id: selectedTeamUUID, msg: message };
+    const payload = {
+      user_id: userUUID,
+      thread_id: threadId,
+      team_id: selectedTeamUUID,
+      msg: message,
+      deployment_id: FASTAGENCY_DEPLOYMENT_UUID,
+    };
     console.log('-----------');
     console.log(selectedTeamUUID);
     console.log(payload);
@@ -226,7 +232,7 @@ export async function sendMsgToNatsServer(
     NatsConnectionManager.setTimeout(threadId, timeoutCallback, 45000);
 
     if (shouldCallInitiateChat) {
-      const clientInputSubject = `chat.client.messages.${threadId}`;
+      const clientInputSubject = `chat.client.messages.${userUUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
       await setupSubscription(js, jc, clientInputSubject, threadId, socket, context, currentChatDetails);
     } else {
       NatsConnectionManager.setConversationId(threadId, conversationId);
