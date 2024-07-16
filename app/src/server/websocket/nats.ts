@@ -11,6 +11,7 @@ const NATS_URL = generateNatsUrl(process.env['NATS_URL'], FASTAGENCY_SERVER_URL)
 console.log(`NATS_URL=${NATS_URL}`);
 
 const AUTH_TOKEN = process.env['AUTH_TOKEN'];
+const DEVELOPER_UUID = process.env['DEVELOPER_UUID'];
 const FASTAGENCY_DEPLOYMENT_UUID = process.env['FASTAGENCY_DEPLOYMENT_UUID'];
 
 const timeoutErrorMsg = 'Oops! Something went wrong. Please create a new chat and try again.';
@@ -205,7 +206,7 @@ export async function sendMsgToNatsServer(
 
     // Initiate chat or continue conversation
     const initiateChatSubject = `chat.server.initiate_chat`;
-    const serverInputSubject = `chat.server.messages.${userUUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
+    const serverInputSubject = `chat.server.messages.${DEVELOPER_UUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
     const subject = shouldCallInitiateChat ? initiateChatSubject : serverInputSubject;
 
     NatsConnectionManager.clearConversationHistory(threadId);
@@ -232,7 +233,7 @@ export async function sendMsgToNatsServer(
     NatsConnectionManager.setTimeout(threadId, timeoutCallback, 45000);
 
     if (shouldCallInitiateChat) {
-      const clientInputSubject = `chat.client.messages.${userUUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
+      const clientInputSubject = `chat.client.messages.${DEVELOPER_UUID}.${FASTAGENCY_DEPLOYMENT_UUID}.${threadId}`;
       await setupSubscription(js, jc, clientInputSubject, threadId, socket, context, currentChatDetails);
     } else {
       NatsConnectionManager.setConversationId(threadId, conversationId);
