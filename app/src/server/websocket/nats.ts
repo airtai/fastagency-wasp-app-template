@@ -211,7 +211,7 @@ export async function sendMsgToNatsServer(
 
     NatsConnectionManager.clearConversationHistory(threadId);
     const payload = {
-      user_id: userUUID,
+      user_id: DEVELOPER_UUID,
       thread_id: threadId,
       team_id: selectedTeamUUID,
       msg: message,
