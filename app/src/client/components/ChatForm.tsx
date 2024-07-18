@@ -1,14 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-import _ from 'lodash';
-
 import { type Chat } from 'wasp/entities';
 import { createNewChat } from 'wasp/client/operations';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useSocketListener } from 'wasp/client/webSocket';
 
 interface ChatFormProps {
-  handleFormSubmit: (userQuery: string) => void;
+  handleFormSubmit: (userQuery: string, isUserRespondedWithNextAction?: boolean, retrySameChat?: boolean) => void;
   currentChatDetails: Chat | null | undefined;
   triggerChatFormSubmitMsg?: string | null;
 }
@@ -17,17 +16,33 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
   const [formInputValue, setFormInputValue] = useState('');
   const [disableFormSubmit, setDisableFormSubmit] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toggleTextAreaFocus, setToggleTextAreaFocus] = useState(false);
+  const isProcessing = useRef(false);
+  const textAreaRef = React.useRef<HTMLTextAreaElement>();
+  const isEmptyMessage = formInputValue.trim().length === 0;
   const history = useHistory();
 
-  const formInputRef = useCallback(
+  const formRef = useCallback(
     async (node: any) => {
       if (node !== null && triggerChatFormSubmitMsg) {
-        // @ts-ignore
         await handleFormSubmit(triggerChatFormSubmitMsg, true);
       }
     },
     [triggerChatFormSubmitMsg]
   );
+
+  useEffect(() => {
+    if (toggleTextAreaFocus && (!disableFormSubmit || !isSubmitting || !isProcessing.current)) {
+      if (textAreaRef.current) {
+        textAreaRef.current.focus();
+      }
+    }
+  }, [disableFormSubmit, isSubmitting, isProcessing.current, toggleTextAreaFocus]);
+
+  const setFocusOnTextArea = () => {
+    setToggleTextAreaFocus(true);
+  };
+  useSocketListener('streamFromTeamFinished', setFocusOnTextArea);
 
   useEffect(() => {
     if (currentChatDetails) {
@@ -37,13 +52,14 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
     }
   }, [currentChatDetails]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (isSubmitting) return;
+  const submitForm = async (inputValue: string) => {
+    if (isSubmitting || disableFormSubmit || isProcessing.current || isEmptyMessage) return;
 
     const msgToSubmit = formInputValue.trim();
+
     setIsSubmitting(true);
+    setToggleTextAreaFocus(false);
+    isProcessing.current = true;
 
     try {
       if (!currentChatDetails) {
@@ -63,14 +79,30 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
       window.alert('Error: Something went wrong. Please try again later.');
     } finally {
       setIsSubmitting(false);
+      isProcessing.current = false;
     }
   };
 
-  const debouncedHandleSubmit = _.debounce(handleSubmit, 500);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await submitForm(formInputValue);
+  };
+
+  const handleButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await submitForm(formInputValue);
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      await submitForm(formInputValue);
+    }
+  };
 
   return (
     <div className='mt-2 mb-2'>
-      <form data-testid='chat-form' onSubmit={debouncedHandleSubmit} className=''>
+      <form data-testid='chat-form' onSubmit={handleSubmit} className='' ref={formRef}>
         <label htmlFor='search' className='mb-2 text-sm font-medium text-captn-dark-blue sr-only dark:text-white'>
           Search
         </label>
@@ -87,21 +119,20 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
             className='block rounded-lg w-full h-12 text-sm text-white bg-primary focus:outline-none focus:ring-0 focus:border-captn-light-blue'
             placeholder='Enter your message...'
             required
-            ref={formInputRef}
             value={formInputValue}
             onChange={(e) => setFormInputValue(e.target.value)}
-            disabled={disableFormSubmit}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                debouncedHandleSubmit(e as any);
-              }
-            }}
+            disabled={disableFormSubmit || isSubmitting}
+            ref={textAreaRef}
+            onKeyDown={handleKeyDown}
           />
           <button
-            type='submit'
+            type='button'
+            disabled={disableFormSubmit || isSubmitting || isEmptyMessage}
+            onClick={handleButtonClick}
             className={`text-primary bg-secondary hover:opacity-90 absolute right-2 font-medium rounded-lg text-sm px-1.5 py-1.5 ${
-              disableFormSubmit ? 'cursor-not-allowed bg-white opacity-70 hover:opacity-70' : 'cursor-pointer'
+              disableFormSubmit || isSubmitting || isEmptyMessage
+                ? 'cursor-not-allowed bg-white opacity-70 hover:opacity-70'
+                : 'cursor-pointer'
             }`}
           >
             <span className=''>
