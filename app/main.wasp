@@ -1,6 +1,6 @@
 app awesomeSaaSApp {
   wasp: {
-    version: "^0.13.0"
+    version: "^0.14.0"
   },
   title: "Awesome SaaS app",
   head: [
@@ -33,9 +33,9 @@ app awesomeSaaSApp {
     onAuthFailedRedirectTo: "/login",
     onAuthSucceededRedirectTo: "/chat",
   },
-  db: {
-    system: PostgreSQL,
-  },
+  // db: {
+  //   system: PostgreSQL,
+  // },
   client: {
     rootComponent: import App from "@src/client/App",
   },
@@ -55,61 +55,6 @@ app awesomeSaaSApp {
     fn: import { socketFn } from "@src/server/websocket/webSocket.js"
   },
 }
-
-/* 💽 Wasp defines DB entities via Prisma Database Models:
- * https://wasp-lang.dev/docs/data-model/entities
- */
-
-entity User {=psl
-  id                        Int             @id @default(autoincrement())
-  uuid                      String?         @default(uuid())
-  email                     String?         @unique
-  username                  String?         @unique
-  createdAt                 DateTime        @default(now())
-  lastActiveTimestamp       DateTime        @default(now())
-  isAdmin                   Boolean         @default(false)
-  checkoutSessionId         String?
-  chats    Chat[]
-  conversations    Conversation[]
-psl=}
-
-entity Chat {=psl
-    id                        Int             @id @default(autoincrement())
-    uuid                      String?         @default(uuid())
-    createdAt                 DateTime        @default(now())
-    updatedAt                 DateTime        @updatedAt
-    team_uuid                 String?
-    team_name                 String?
-    team_status               String?
-    userRespondedWithNextAction             Boolean         @default(false)
-    agentChatHistory         String?
-    isExceptionOccured       Boolean         @default(false)
-    showLoader  Boolean         @default(false)
-    streamAgentResponse Boolean         @default(false)
-    customerBrief       String?
-    user        User?    @relation(fields: [userId], references: [id])
-    userId      Int?
-    name        String?          @default("New chat")
-    isChatNameUpdated Boolean         @default(false)
-    isChatTerminated Boolean         @default(false)
-    selectedTeam   String?
-    conversations    Conversation[]
-psl=}
-
-entity Conversation {=psl
-    id                          Int             @id @default(autoincrement())
-    createdAt                   DateTime        @default(now())
-    updatedAt                   DateTime        @updatedAt
-    message                     String
-    role                        String
-    agentConversationHistory    String?
-    isLoading                   Boolean         @default(false)
-    chat                        Chat?           @relation(fields: [chatId], references: [id])
-    chatId                      Int?
-    user                        User?           @relation(fields: [userId], references: [id])
-    userId                      Int?
-
-psl=}
 
 /* 📡 These are the Wasp Routes (You can protect them easily w/ 'authRequired: true');
  * https://wasp-lang.dev/docs/tutorial/pages

@@ -31,18 +31,21 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
     [triggerChatFormSubmitMsg]
   );
 
+  const setFocusOnTextArea = () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  };
   useEffect(() => {
-    if (toggleTextAreaFocus && (!disableFormSubmit || !isSubmitting || !isProcessing.current)) {
-      if (textAreaRef.current) {
-        textAreaRef.current.focus();
-      }
+    const responseCompleted = !disableFormSubmit || !isSubmitting || !isProcessing.current;
+    if (toggleTextAreaFocus && responseCompleted) {
+      setFocusOnTextArea();
     }
   }, [disableFormSubmit, isSubmitting, isProcessing.current, toggleTextAreaFocus]);
 
-  const setFocusOnTextArea = () => {
+  useSocketListener('streamFromTeamFinished', () => {
     setToggleTextAreaFocus(true);
-  };
-  useSocketListener('streamFromTeamFinished', setFocusOnTextArea);
+  });
 
   useEffect(() => {
     if (currentChatDetails) {
@@ -50,9 +53,10 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
     } else {
       setDisableFormSubmit(false);
     }
+    setFocusOnTextArea();
   }, [currentChatDetails]);
 
-  const submitForm = async (inputValue: string) => {
+  const submitForm = async () => {
     if (isSubmitting || disableFormSubmit || isProcessing.current || isEmptyMessage) return;
 
     const msgToSubmit = formInputValue.trim();
@@ -85,18 +89,18 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await submitForm(formInputValue);
+    await submitForm();
   };
 
   const handleButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await submitForm(formInputValue);
+    await submitForm();
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      await submitForm(formInputValue);
+      await submitForm();
     }
   };
 
@@ -108,6 +112,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
         </label>
         <div className='relative bottom-0 left-0 right-0 flex items-center justify-between m-1'>
           <TextareaAutosize
+            autoFocus
             minRows={1}
             maxRows={4}
             style={{

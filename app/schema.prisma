@@ -1,0 +1,59 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                        Int             @id @default(autoincrement())
+  uuid                      String?         @default(uuid())
+  email                     String?         @unique
+  username                  String?         @unique
+  createdAt                 DateTime        @default(now())
+  lastActiveTimestamp       DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
+  checkoutSessionId         String?
+  chats    Chat[]
+  conversations    Conversation[]
+}
+
+model Chat {
+    id                        Int             @id @default(autoincrement())
+    uuid                      String?         @default(uuid())
+    createdAt                 DateTime        @default(now())
+    updatedAt                 DateTime        @updatedAt
+    team_uuid                 String?
+    team_name                 String?
+    team_status               String?
+    userRespondedWithNextAction             Boolean         @default(false)
+    agentChatHistory         String?
+    isExceptionOccured       Boolean         @default(false)
+    showLoader  Boolean         @default(false)
+    streamAgentResponse Boolean         @default(false)
+    customerBrief       String?
+    user        User?    @relation(fields: [userId], references: [id])
+    userId      Int?
+    name        String?          @default("New chat")
+    isChatNameUpdated Boolean         @default(false)
+    isChatTerminated Boolean         @default(false)
+    selectedTeam   String?
+    conversations    Conversation[]
+}
+
+model Conversation {
+    id                          Int             @id @default(autoincrement())
+    createdAt                   DateTime        @default(now())
+    updatedAt                   DateTime        @updatedAt
+    message                     String
+    role                        String
+    agentConversationHistory    String?
+    isLoading                   Boolean         @default(false)
+    chat                        Chat?           @relation(fields: [chatId], references: [id])
+    chatId                      Int?
+    user                        User?           @relation(fields: [userId], references: [id])
+    userId                      Int?
+
+}
