@@ -108,6 +108,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
         </label>
         <div className='relative bottom-0 left-0 right-0 flex items-center justify-between m-1'>
           <TextareaAutosize
+            autoFocus
             minRows={1}
             maxRows={4}
             style={{
