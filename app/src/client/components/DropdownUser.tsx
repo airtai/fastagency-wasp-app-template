@@ -1,4 +1,4 @@
-import { type AuthUser, getUsername } from 'wasp/auth';
+import { AuthUser } from 'wasp/auth';
 import { useEffect, useRef, useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { UserMenuItems } from './UserMenuItems';
@@ -11,6 +11,7 @@ const DropdownUser = ({ user }: { user: AuthUser }) => {
   const dropdown = useRef<any>(null);
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+  const username = user.identities.username?.id;
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -42,7 +43,7 @@ const DropdownUser = ({ user }: { user: AuthUser }) => {
         className='flex items-center gap-4 duration-300 ease-in-out text-white hover:text-secondary'
       >
         <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium dark:text-white'>{getUsername(user)}</span>
+          <span className='block text-sm font-medium dark:text-white'>{username}</span>
         </span>
         <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem] dark:text-white' />
         <svg

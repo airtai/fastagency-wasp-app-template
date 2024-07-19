@@ -61,7 +61,7 @@ jobs:
 
       - name: Install wasp
         run: |
-          curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.13.2
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.14.0
           echo "$HOME/.wasp/bin" >> $GITHUB_PATH
       
       - uses: superfly/flyctl-actions/setup-flyctl@master
@@ -133,7 +133,7 @@ jobs:
 
       - name: Install wasp
         run: |
-          curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.13.2
+          curl -sSL https://get.wasp-lang.dev/installer.sh | sh -s -- -v 0.14.0
           echo "$HOME/.wasp/bin" >> $GITHUB_PATH
       
       - uses: superfly/flyctl-actions/setup-flyctl@master
