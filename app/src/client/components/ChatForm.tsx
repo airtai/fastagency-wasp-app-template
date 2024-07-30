@@ -14,18 +14,21 @@ interface ChatFormProps {
 
 export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
   const [message, setMessage] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const history = useHistory();
   const hasTriggerSubmitted = useRef(false);
 
-  const isChatInProgress = currentChatDetails?.team_status === 'inprogress';
+  const isInputDisabled = useCallback(() => {
+    return (
+      hasTriggerSubmitted.current || currentChatDetails?.team_status === 'inprogress' || currentChatDetails?.showLoader
+    );
+  }, [currentChatDetails]);
 
   useEffect(() => {
-    if (!isChatInProgress) {
+    if (!isInputDisabled()) {
       textAreaRef.current?.focus();
     }
-  }, [isChatInProgress]);
+  }, [isInputDisabled]);
 
   useEffect(() => {
     if (currentChatDetails && currentChatDetails.isChatTerminated) {
@@ -36,6 +39,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
 
   useSocketListener('streamFromTeamFinished', () => {
     textAreaRef.current?.focus();
+    hasTriggerSubmitted.current = false;
   });
 
   const formRef = useCallback(
@@ -49,24 +53,24 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
   );
 
   const submitMessage = async () => {
-    if (isSubmitting || isChatInProgress || !message.trim()) return;
+    if (isInputDisabled() || !message.trim()) return;
 
-    setIsSubmitting(true);
+    hasTriggerSubmitted.current = true;
 
     try {
       if (!currentChatDetails) {
         const chat = await createNewChat();
         history.push(`/chat/${chat.uuid}?initiateChatMsg=${encodeURIComponent(message.trim())}`);
         hasTriggerSubmitted.current = false;
-      } else if (!currentChatDetails.showLoader && currentChatDetails.team_status !== 'inprogress') {
-        handleFormSubmit(message.trim());
+      } else {
+        await handleFormSubmit(message.trim());
       }
       setMessage('');
     } catch (err) {
       console.error('Error submitting message:', err);
       // Handle error (e.g., show user-friendly error message)
     } finally {
-      setIsSubmitting(false);
+      hasTriggerSubmitted.current = false;
     }
   };
 
@@ -90,7 +94,6 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
           value={message}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          disabled={isSubmitting || isChatInProgress}
           placeholder='Enter your message...'
           minRows={1}
           maxRows={4}
@@ -99,9 +102,9 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
         />
         <button
           type='submit'
-          disabled={isSubmitting || isChatInProgress || !message.trim()}
+          disabled={isInputDisabled() || !message.trim()}
           className={`absolute right-2 p-1.5 rounded-lg ${
-            isSubmitting || isChatInProgress || !message.trim()
+            isInputDisabled() || !message.trim()
               ? 'bg-gray-300 cursor-not-allowed'
               : 'bg-secondary hover:opacity-90 cursor-pointer'
           }`}

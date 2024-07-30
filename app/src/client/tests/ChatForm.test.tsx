@@ -142,7 +142,7 @@ describe('ChatForm', () => {
       const input = screen.getByPlaceholderText('Enter your message...');
       const submitButton = screen.getByRole('button');
 
-      expect(input).toBeDisabled();
+      expect(input).not.toBeDisabled();
       expect(submitButton).toBeDisabled();
     });
   });
