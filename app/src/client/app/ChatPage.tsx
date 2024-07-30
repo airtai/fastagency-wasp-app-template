@@ -145,6 +145,7 @@ const chatPage = ({ user }: { user: User }) => {
       triggerChatFormSubmitMsg={triggerChatFormSubmitMsg}
       refetchAllChatDetails={refetchAllChatDetails}
       triggerScrollBarMove={triggerScrollBarMove}
+      setNotificationErrorMessage={setNotificationErrorMessage}
     >
       <div className='flex h-full flex-col'>
         {currentChatDetails ? (

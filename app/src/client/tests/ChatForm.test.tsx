@@ -34,6 +34,7 @@ const renderChatForm = (props = {}) => {
     handleFormSubmit: vi.fn(),
     currentChatDetails: null,
     triggerChatFormSubmitMsg: null,
+    setNotificationErrorMessage: vi.fn(),
   };
   return renderInContext(<ChatForm {...defaultProps} {...props} />);
 };
@@ -56,7 +57,12 @@ describe('ChatForm', () => {
     test('creates a new chat when currentChatDetails is null', async () => {
       renderInContext(
         <Router history={history}>
-          <ChatForm handleFormSubmit={vi.fn()} currentChatDetails={null} triggerChatFormSubmitMsg={null} />
+          <ChatForm
+            handleFormSubmit={vi.fn()}
+            currentChatDetails={null}
+            triggerChatFormSubmitMsg={null}
+            setNotificationErrorMessage={vi.fn()}
+          />
         </Router>
       );
 

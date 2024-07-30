@@ -10,9 +10,15 @@ interface ChatFormProps {
   handleFormSubmit: (userQuery: string, isUserRespondedWithNextAction?: boolean, retrySameChat?: boolean) => void;
   currentChatDetails: Chat | null | undefined;
   triggerChatFormSubmitMsg?: string | null;
+  setNotificationErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
+export default function ChatForm({
+  handleFormSubmit,
+  currentChatDetails,
+  triggerChatFormSubmitMsg,
+  setNotificationErrorMessage,
+}: ChatFormProps) {
   const [message, setMessage] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const history = useHistory();
@@ -68,7 +74,7 @@ export default function ChatForm({ handleFormSubmit, currentChatDetails, trigger
       setMessage('');
     } catch (err) {
       console.error('Error submitting message:', err);
-      // Handle error (e.g., show user-friendly error message)
+      setNotificationErrorMessage('Oops! Something went wrong while sending your message. Please try again later.');
     } finally {
       hasTriggerSubmitted.current = false;
     }
