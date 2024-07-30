@@ -72,7 +72,7 @@ const chatPage = ({ user }: { user: User }) => {
   useEffect(() => {
     if (formSubmitMsg && currentChatDetails) {
       if (!currentChatDetails.userRespondedWithNextAction) {
-        setTriggerChatFormSubmitMsg(formSubmitMsg);
+        setTriggerChatFormSubmitMsg(decodeURIComponent(formSubmitMsg));
       }
       removeQueryParameters();
     }

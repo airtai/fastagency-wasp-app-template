@@ -70,7 +70,7 @@ describe('ChatForm', () => {
         fireEvent.submit(form);
       });
 
-      expect(pushSpy).toHaveBeenCalledWith('/chat/new-chat-uuid?initiateChatMsg=New chat message');
+      expect(pushSpy).toHaveBeenCalledWith('/chat/new-chat-uuid?initiateChatMsg=New%20chat%20message');
       expect(mockCreateNewChat).toHaveBeenCalled();
     });
   });
