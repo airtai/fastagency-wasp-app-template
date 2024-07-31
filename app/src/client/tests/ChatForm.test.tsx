@@ -34,6 +34,7 @@ const renderChatForm = (props = {}) => {
     handleFormSubmit: vi.fn(),
     currentChatDetails: null,
     triggerChatFormSubmitMsg: null,
+    setNotificationErrorMessage: vi.fn(),
   };
   return renderInContext(<ChatForm {...defaultProps} {...props} />);
 };
@@ -56,7 +57,12 @@ describe('ChatForm', () => {
     test('creates a new chat when currentChatDetails is null', async () => {
       renderInContext(
         <Router history={history}>
-          <ChatForm handleFormSubmit={vi.fn()} currentChatDetails={null} triggerChatFormSubmitMsg={null} />
+          <ChatForm
+            handleFormSubmit={vi.fn()}
+            currentChatDetails={null}
+            triggerChatFormSubmitMsg={null}
+            setNotificationErrorMessage={vi.fn()}
+          />
         </Router>
       );
 
@@ -70,7 +76,7 @@ describe('ChatForm', () => {
         fireEvent.submit(form);
       });
 
-      expect(pushSpy).toHaveBeenCalledWith('/chat/new-chat-uuid?initiateChatMsg=New chat message');
+      expect(pushSpy).toHaveBeenCalledWith('/chat/new-chat-uuid?initiateChatMsg=New%20chat%20message');
       expect(mockCreateNewChat).toHaveBeenCalled();
     });
   });
@@ -142,7 +148,7 @@ describe('ChatForm', () => {
       const input = screen.getByPlaceholderText('Enter your message...');
       const submitButton = screen.getByRole('button');
 
-      expect(input).toBeDisabled();
+      expect(input).not.toBeDisabled();
       expect(submitButton).toBeDisabled();
     });
   });

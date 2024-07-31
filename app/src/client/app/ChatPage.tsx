@@ -72,7 +72,7 @@ const chatPage = ({ user }: { user: User }) => {
   useEffect(() => {
     if (formSubmitMsg && currentChatDetails) {
       if (!currentChatDetails.userRespondedWithNextAction) {
-        setTriggerChatFormSubmitMsg(formSubmitMsg);
+        setTriggerChatFormSubmitMsg(decodeURIComponent(formSubmitMsg));
       }
       removeQueryParameters();
     }
@@ -145,6 +145,7 @@ const chatPage = ({ user }: { user: User }) => {
       triggerChatFormSubmitMsg={triggerChatFormSubmitMsg}
       refetchAllChatDetails={refetchAllChatDetails}
       triggerScrollBarMove={triggerScrollBarMove}
+      setNotificationErrorMessage={setNotificationErrorMessage}
     >
       <div className='flex h-full flex-col'>
         {currentChatDetails ? (
