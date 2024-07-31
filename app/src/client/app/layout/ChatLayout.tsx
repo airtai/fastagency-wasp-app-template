@@ -16,6 +16,7 @@ interface Props {
   triggerChatFormSubmitMsg?: string | null;
   refetchAllChatDetails: boolean;
   triggerScrollBarMove: boolean;
+  setNotificationErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const ChatLayout: FC<Props> = ({
@@ -25,6 +26,7 @@ const ChatLayout: FC<Props> = ({
   triggerChatFormSubmitMsg,
   refetchAllChatDetails,
   triggerScrollBarMove,
+  setNotificationErrorMessage,
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shouldAutoScroll, setShouldAutoScroll] = useState<boolean>(false);
@@ -75,6 +77,7 @@ const ChatLayout: FC<Props> = ({
             handleFormSubmit={handleFormSubmit}
             currentChatDetails={currentChatDetails}
             triggerChatFormSubmitMsg={triggerChatFormSubmitMsg}
+            setNotificationErrorMessage={setNotificationErrorMessage}
           />
         </div>
 

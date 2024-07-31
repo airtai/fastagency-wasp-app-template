@@ -10,150 +10,123 @@ interface ChatFormProps {
   handleFormSubmit: (userQuery: string, isUserRespondedWithNextAction?: boolean, retrySameChat?: boolean) => void;
   currentChatDetails: Chat | null | undefined;
   triggerChatFormSubmitMsg?: string | null;
+  setNotificationErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function ChatForm({ handleFormSubmit, currentChatDetails, triggerChatFormSubmitMsg }: ChatFormProps) {
-  const [formInputValue, setFormInputValue] = useState('');
-  const [disableFormSubmit, setDisableFormSubmit] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toggleTextAreaFocus, setToggleTextAreaFocus] = useState(false);
-  const isProcessing = useRef(false);
-  const textAreaRef = React.useRef<HTMLTextAreaElement>();
-  const isEmptyMessage = formInputValue.trim().length === 0;
+export default function ChatForm({
+  handleFormSubmit,
+  currentChatDetails,
+  triggerChatFormSubmitMsg,
+  setNotificationErrorMessage,
+}: ChatFormProps) {
+  const [message, setMessage] = useState<string>('');
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const history = useHistory();
+  const hasTriggerSubmitted = useRef(false);
+
+  const isInputDisabled = useCallback(() => {
+    return (
+      hasTriggerSubmitted.current || currentChatDetails?.team_status === 'inprogress' || currentChatDetails?.showLoader
+    );
+  }, [currentChatDetails]);
+
+  useEffect(() => {
+    if (!isInputDisabled()) {
+      textAreaRef.current?.focus();
+    }
+  }, [isInputDisabled]);
+
+  useEffect(() => {
+    if (currentChatDetails && currentChatDetails.isChatTerminated) {
+      return;
+    }
+    textAreaRef.current?.focus();
+  }, [currentChatDetails]);
+
+  useSocketListener('streamFromTeamFinished', () => {
+    textAreaRef.current?.focus();
+    hasTriggerSubmitted.current = false;
+  });
 
   const formRef = useCallback(
-    async (node: any) => {
-      if (node !== null && triggerChatFormSubmitMsg) {
+    async (node: HTMLFormElement | null) => {
+      if (node !== null && triggerChatFormSubmitMsg && !hasTriggerSubmitted.current) {
+        hasTriggerSubmitted.current = true;
         await handleFormSubmit(triggerChatFormSubmitMsg, true);
       }
     },
-    [triggerChatFormSubmitMsg]
+    [triggerChatFormSubmitMsg, handleFormSubmit]
   );
 
-  const setFocusOnTextArea = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.focus();
-    }
-  };
-  useEffect(() => {
-    const responseCompleted = !disableFormSubmit || !isSubmitting || !isProcessing.current;
-    if (toggleTextAreaFocus && responseCompleted) {
-      setFocusOnTextArea();
-    }
-  }, [disableFormSubmit, isSubmitting, isProcessing.current, toggleTextAreaFocus]);
+  const submitMessage = async () => {
+    if (isInputDisabled() || !message.trim()) return;
 
-  useSocketListener('streamFromTeamFinished', () => {
-    setToggleTextAreaFocus(true);
-  });
-
-  useEffect(() => {
-    if (currentChatDetails) {
-      setDisableFormSubmit(currentChatDetails.team_status === 'inprogress');
-    } else {
-      setDisableFormSubmit(false);
-    }
-    setFocusOnTextArea();
-  }, [currentChatDetails]);
-
-  const submitForm = async () => {
-    if (isSubmitting || disableFormSubmit || isProcessing.current || isEmptyMessage) return;
-
-    const msgToSubmit = formInputValue.trim();
-
-    setIsSubmitting(true);
-    setToggleTextAreaFocus(false);
-    isProcessing.current = true;
+    hasTriggerSubmitted.current = true;
 
     try {
       if (!currentChatDetails) {
-        const chat: Chat = await createNewChat();
-        history.push(`/chat/${chat.uuid}?initiateChatMsg=${msgToSubmit}`);
-        setFormInputValue('');
-      } else if (
-        currentChatDetails &&
-        !currentChatDetails.showLoader &&
-        currentChatDetails.team_status !== 'inprogress'
-      ) {
-        setFormInputValue('');
-        handleFormSubmit(msgToSubmit);
+        const chat = await createNewChat();
+        history.push(`/chat/${chat.uuid}?initiateChatMsg=${encodeURIComponent(message.trim())}`);
+        hasTriggerSubmitted.current = false;
+      } else {
+        await handleFormSubmit(message.trim());
       }
-    } catch (err: any) {
-      console.log('Error: ' + err.message);
-      window.alert('Error: Something went wrong. Please try again later.');
+      setMessage('');
+    } catch (err) {
+      console.error('Error submitting message:', err);
+      setNotificationErrorMessage('Oops! Something went wrong while sending your message. Please try again later.');
     } finally {
-      setIsSubmitting(false);
-      isProcessing.current = false;
+      hasTriggerSubmitted.current = false;
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await submitForm();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submitMessage();
   };
 
-  const handleButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    await submitForm();
-  };
-
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      await submitForm();
+      submitMessage();
     }
   };
 
   return (
-    <div className='mt-2 mb-2'>
-      <form data-testid='chat-form' onSubmit={handleSubmit} className='' ref={formRef}>
-        <label htmlFor='search' className='mb-2 text-sm font-medium text-captn-dark-blue sr-only dark:text-white'>
-          Search
-        </label>
-        <div className='relative bottom-0 left-0 right-0 flex items-center justify-between m-1'>
-          <TextareaAutosize
-            autoFocus
-            minRows={1}
-            maxRows={4}
-            style={{
-              lineHeight: 2,
-              resize: 'none',
-            }}
-            id='userQuery'
-            name='search'
-            className='block rounded-lg w-full h-12 text-sm text-white bg-primary focus:outline-none focus:ring-0 focus:border-captn-light-blue'
-            placeholder='Enter your message...'
-            required
-            value={formInputValue}
-            onChange={(e) => setFormInputValue(e.target.value)}
-            disabled={disableFormSubmit || isSubmitting}
-            ref={textAreaRef}
-            onKeyDown={handleKeyDown}
-          />
-          <button
-            type='button'
-            disabled={disableFormSubmit || isSubmitting || isEmptyMessage}
-            onClick={handleButtonClick}
-            className={`text-primary bg-secondary hover:opacity-90 absolute right-2 font-medium rounded-lg text-sm px-1.5 py-1.5 ${
-              disableFormSubmit || isSubmitting || isEmptyMessage
-                ? 'cursor-not-allowed bg-white opacity-70 hover:opacity-70'
-                : 'cursor-pointer'
-            }`}
-          >
-            <span className=''>
-              <svg width='20' height='20' viewBox='0 0 24 24' fill='none' className='text-primary'>
-                <path
-                  d='M7 11L12 6L17 11M12 18V7'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                ></path>
-              </svg>
-            </span>
-          </button>
-        </div>
-      </form>
-    </div>
+    <form data-testid='chat-form' onSubmit={handleSubmit} className='mt-2 mb-2' ref={formRef}>
+      <div className='relative flex items-center m-1'>
+        <TextareaAutosize
+          ref={textAreaRef}
+          value={message}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder='Enter your message...'
+          minRows={1}
+          maxRows={4}
+          className='w-full p-2 text-sm text-white bg-primary rounded-lg focus:outline-none focus:ring-0'
+          style={{ resize: 'none', lineHeight: '1.5' }}
+        />
+        <button
+          type='submit'
+          disabled={isInputDisabled() || !message.trim()}
+          className={`absolute right-2 p-1.5 rounded-lg ${
+            isInputDisabled() || !message.trim()
+              ? 'bg-gray-300 cursor-not-allowed'
+              : 'bg-secondary hover:opacity-90 cursor-pointer'
+          }`}
+          aria-label='Send message'
+        >
+          <svg width='20' height='20' viewBox='0 0 24 24' fill='none' className='text-primary'>
+            <path
+              d='M7 11L12 6L17 11M12 18V7'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </button>
+      </div>
+    </form>
   );
 }
